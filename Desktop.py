@@ -82,7 +82,7 @@ def set_wallpaper(image, img_format):
 
     if not img_format.startswith('.'): args.format = ''.join(('.', args.format))
 
-    if not path.isdir('~/Pictures/WeatherDesk/'): os.mkdir(path.expanduser('~/Pictures/WeatherDesk/'))
+    if not path.isdir(path.expanduser('~/Pictures/WeatherDesk/')): os.mkdir(path.expanduser('~/Pictures/WeatherDesk/'))
 
     current_image = open(
         path.join(
@@ -91,7 +91,9 @@ def set_wallpaper(image, img_format):
 
     desktop_env = get_desktop_environment()
 
-    current_image_path = path.abspath(path.join(path.expanduser('~/Pictures'), str('WeatherDesk' + img_format)))
+    current_image_path = path.abspath(path.join(
+    path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
+    ))
 
     shutil.copyfile(image, current_image_path)
 
