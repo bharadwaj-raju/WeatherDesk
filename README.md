@@ -1,7 +1,11 @@
 # WeatherDesk
-Change the wallpaper based on the weather
+Change the wallpaper based on the weather.
 
-<a href="https://www.yahoo.com/?ilc=401" target="_blank"> <img src="https://poweredby.yahoo.com/purple.png" width="134" height="29"></img></a>
+License: [GNU GPL v3](https://www.gnu.org/licenses/gpl.txt)
+
+Thanks to StackOverflow user [Martin Hensen](http://stackoverflow.com/users/2118300/martin-hansen) for the `Desktop.py` module. (The functions modified a bit from the original.)
+
+[![Powered by Yahoo!](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)
 
 # Installation
 

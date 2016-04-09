@@ -9,6 +9,14 @@ import re
 
 # Library to set wallpaper and find desktop - Cross-platform
 
+# set_wallpaper() and get_config_dir()
+# taken (and modified a bit) from http://stackoverflow.com/a/21213504/5413945
+# by stackoverflow user Martin Hensen
+
+# get_desktop_environment()
+# taken (and modified a bit) from http://stackoverflow.com/a/21213358/5413945
+# by stackoverflow user Martin Hensen
+
 def get_desktop_environment():
 
     if sys.platform in ['win32', 'cygwin']: return 'windows'

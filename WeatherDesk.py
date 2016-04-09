@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com> All Rights Reserved.
+
+# Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
+
 from urllib.request import urlopen
 from os import system, path, mkdir, walk
 import time
 import json
-from sys import exit, platform, stderr
+from sys import exit, stderr
 import argparse
 import Desktop
+
+__author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
 TIME_WAIT = 3600  # seconds
 
