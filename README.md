@@ -9,6 +9,8 @@ Change the wallpaper based on the weather
 
 - Python 3
 
+## Running
+
 Just run the `WeatherDesk.py` script.
 
 # Usage
