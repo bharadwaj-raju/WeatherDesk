@@ -158,6 +158,8 @@ def set_wallpaper(image, img_format):
             # Update: That, too, is gone. KDE users will have to set a
             # peridically updating slideshow in the ~/WeatherDesk folder.
 
+            # Update: Even *that* does not work. Sorry, KDE.
+
         elif desktop_env in ['kde3', 'trinity']:
 
             args = 'dcop kdesktop KBackgroundIface setWallpaper 0 "%s" 6' % current_image_path
