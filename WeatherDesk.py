@@ -7,6 +7,7 @@
 from urllib.request import urlopen
 from os import system, path, mkdir, walk
 import time
+import datetime
 import json
 from sys import exit, stderr
 import argparse
@@ -14,7 +15,7 @@ import Desktop
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
-TIME_WAIT = 3600  # seconds
+TIME_WAIT = 600  # seconds
 
 DEFAULT_WALLS_DIR = path.expanduser('~') + '/.weatherdesk_walls/'
 
@@ -40,13 +41,15 @@ arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
     help=str('Specify time (in seconds) to wait before updating. Current: %d' % TIME_WAIT),
     required=False)
 
+arg_parser.add_argument('-t', '--time', action='store_true',
+    help='Use different backgrounds for evening, day and night.',
+    required=False)
+
 arg_parser.add_argument('-n', '--naming', action='store_true',
     help='Show the image file-naming rules and exit.',
     required=False)
 
 # TODO: Implement day/night variation.
-# arg_parser.add_argument('--time', action='store_true',
-# help='Also include day/night variation in wallpapers. To support, add "day-" or "night-" in front of file name.')
 
 args = arg_parser.parse_args()
 
@@ -62,10 +65,33 @@ ______________________|________________
  Snow:                | snow{0}
  Cloudy:              | cloudy{0}
  Other:               | normal{0}
+
+ If using with --time: Add "day-", "night-" or "evening-" in front of filename.
 '''
 
+def get_time_of_day():
 
-def get_file_name(weather_name):
+    '''
+    06 to 17: day
+    17 to 20: evening
+    20 to 6 : night
+    '''
+
+    current_time = datetime.datetime.now()
+
+    if current_time.hour in range(6, 17):
+
+        return 'day'
+
+    elif current_time.hour in range(17, 20):
+
+        return 'evening'
+
+    else:
+
+        return 'night'
+
+def get_file_name(weather_name, time=False):
 
     if 'drizzle' or 'rain' in weather_name: weather_file = 'rain' + FILE_FORMAT
 
@@ -82,6 +108,10 @@ def get_file_name(weather_name):
     if 'cloud' in weather_name: weather_file = 'cloudy' + FILE_FORMAT
 
     else: weather_file = 'normal' + FILE_FORMAT
+
+    if time:
+
+        return get_time_of_day() + '-' + weather_file
 
     return weather_file
 
@@ -125,6 +155,31 @@ if args.wait is not None:
 
 if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
 
+
+def check_if_all_files_exist(time=False):
+
+    all_exist = True
+
+    if time:
+
+        required_files = ['evening-normal', 'day-normal', 'night-normal',
+        'evening-rain', 'day-rain', 'night-rain',
+        'evening-snow', 'day-snow', 'night-snow',
+        'evening-thunder', 'day-thunder', 'night-thunder',
+        'evening-wind', 'day-wind', 'night-wind',
+        'evening-cloudy', 'day-cloudy', 'night-cloudy']
+
+    else:
+
+        required_files = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
+
+    for i in required_files:
+
+        if not path.isfile(path.join(walls_dir + (i + FILE_FORMAT))):
+
+            return False
+
+
 while True:
 
     weather_json_url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
@@ -132,6 +187,12 @@ while True:
 
     weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
-    Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather)), FILE_FORMAT)
+    if not check_if_all_files_exist(time=args.time):
+
+        stderr.write('Not all required files were found.\n %s' % NAMING_RULES)
+
+        exit(1)
+
+    Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, args.time)), FILE_FORMAT)
 
     time.sleep(TIME_WAIT)

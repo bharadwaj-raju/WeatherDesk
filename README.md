@@ -17,6 +17,14 @@ Thanks to StackOverflow user [Martin Hensen](http://stackoverflow.com/users/2118
 
 Just run the `WeatherDesk.py` script.
 
+### In background mode (only for OS X and Linux)
+
+Run
+
+```sh
+$ python3 WeatherDesk.py &
+```
+
 # Usage
 
 ## Options
