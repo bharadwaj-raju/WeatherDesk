@@ -58,5 +58,6 @@ ______________________|________________
 
 # Note for KDE users
 
-Since KDE 4+ does not provide an interface to change the desktop background, set a slideshow to update continuously
-in the folder `~/Pictures/WeatherDesk/` folder.
+Since KDE 4 and above does not provide an interface to change the desktop background, KDE 4 and above is not supported.
+
+Any contributions on this welcome.
