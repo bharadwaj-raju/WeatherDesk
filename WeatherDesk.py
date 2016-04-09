@@ -17,7 +17,7 @@ __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
 TIME_WAIT = 600  # seconds
 
-DEFAULT_WALLS_DIR = path.expanduser('~') + '/.weatherdesk_walls/'
+DEFAULT_WALLS_DIR = path.join(path.expanduser('~') + '/.weatherdesk_walls/')
 
 FILE_FORMAT = '.jpg'
 
@@ -158,8 +158,6 @@ if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
 
 def check_if_all_files_exist(time=False):
 
-    all_exist = True
-
     if time:
 
         required_files = ['evening-normal', 'day-normal', 'night-normal',
@@ -175,9 +173,13 @@ def check_if_all_files_exist(time=False):
 
     for i in required_files:
 
-        if not path.isfile(path.join(walls_dir + (i + FILE_FORMAT))):
+        if not path.isfile(path.join(walls_dir, (i + FILE_FORMAT))):
+
+            stderr.write(path.join(walls_dir, (i + FILE_FORMAT)))
 
             return False
+
+    return True
 
 
 while True:
@@ -189,10 +191,10 @@ while True:
 
     if not check_if_all_files_exist(time=args.time):
 
-        stderr.write('Not all required files were found.\n %s' % NAMING_RULES)
+        stderr.write('Not all required files were found.\n %s' % NAMING_RULES.format(FILE_FORMAT))
 
         exit(1)
 
-    Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, args.time)), FILE_FORMAT)
+    Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=args.time)), FILE_FORMAT)
 
     time.sleep(TIME_WAIT)
