@@ -135,14 +135,6 @@ else:
 
     walls_dir = DEFAULT_WALLS_DIR
 
-for dirpath, dirnames, files in walk(walls_dir):
-
-    if not files:
-
-        stderr.write('No image files in %s.' % walls_dir)
-
-        exit(1)
-
 if args.format is not None:
 
     if not args.format.startswith('.'): args.format = ''.join(('.', args.format))
@@ -174,8 +166,6 @@ def check_if_all_files_exist(time=False):
     for i in required_files:
 
         if not path.isfile(path.join(walls_dir, (i + FILE_FORMAT))):
-
-            stderr.write(path.join(walls_dir, (i + FILE_FORMAT)))
 
             return False
 
