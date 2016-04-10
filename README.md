@@ -1,5 +1,5 @@
 # WeatherDesk
-Change the wallpaper based on the weather.
+Change the wallpaper based on the weather and (optionally) the time.
 
 License: [GNU GPL v3](https://www.gnu.org/licenses/gpl.txt)
 
