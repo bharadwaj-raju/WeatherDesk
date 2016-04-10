@@ -97,6 +97,8 @@ def set_wallpaper(image, img_format):
         path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
         ), 'w')
 
+    current_image.close()
+
     desktop_env = get_desktop_environment()
 
     current_image_path = path.abspath(path.join(
@@ -170,29 +172,19 @@ def set_wallpaper(image, img_format):
             # XFCE4's image property is not image-path but last-image (What?)
             # Only GNOME seems to have a sane wallpaper interface
 
-            # x_monitor_port_args = 'xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' ')
-            #
-            # x_monitor_port = subprocess.Popen(x_monitor_port_args,stdout=subprocess.PIPE).stdout
-            #
-            # xrandr = subprocess.Popen('xrandr',stdout=subprocess.PIPE).stdout
-            #
-            # xrandr_grep = subprocess.Popen('grep -e " connected [^(]"'.split(' '),stdin=xrandr,stdout=subprocess.PIPE).stdout
-            #
-            # x_monitor_port = subprocess.Popen('sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' '), stdin=xrandr_grep,stdout=subprocess.PIPE).stdout
-            #
-            # args = ('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor%s/workspace0/last-image -s %s' % (x_monitor_port, current_image_path)).split(' ')
-
             XFCE_SCRIPT = r'''
 monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
 xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + current_image_path + '''\nxfdesktop --reload'''
 
-            xfce_script_file = open(path.expanduser('~/.xfce_script.sh'), 'w')
+            xfce_script_file = open(path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
             xfce_script_file.truncate()
 
             xfce_script_file.write(XFCE_SCRIPT)
 
-            subprocess.Popen(['sh', path.abspath(path.expanduser('~/.xfce_script.sh'))])
+            xfce_script_file.close()
+
+            subprocess.Popen(['sh', path.abspath(path.expanduser('~/.weatherdesk_script.sh'))])
 
         elif desktop_env=='razor-qt':
 
@@ -279,13 +271,21 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
            except ImportError:
 
-               SCRIPT = '''/usr/bin/osascript<<END
-               tell application 'Finder' to
-               set desktop picture to POSIX file '%s'
-               end tell
-               END'''
+               OSX_SCRIPT = '''
+tell application 'Finder' to
+set desktop picture to POSIX file '%s'
+end tell
+''' % current_image_path
 
-               subprocess.Popen(SCRIPT % current_image_path, shell=True)
+                osx_script_file = open(path.expanduser('~/.weatherdesk_script.sh'), 'w')
+
+                osx_script_file.truncate()
+
+                osx_script_file.write(OSX_SCRIPT)
+
+                osx_script_file.close()
+
+                subprocess.Popen(['/usr/bin/osascript', path.abspath(path.expanduser('~/.weatherdesk_script.sh'))])
         else:
 
             sys.stderr.write('Error: Failed to set wallpaper. (Desktop not supported)')
