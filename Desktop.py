@@ -6,6 +6,7 @@ import sys
 import subprocess
 import shutil
 import re
+import textwrap
 
 # Library to set wallpaper and find desktop - Cross-platform
 
@@ -170,15 +171,29 @@ def set_wallpaper(image, img_format):
             # XFCE4's image property is not image-path but last-image (What?)
             # Only GNOME seems to have a sane wallpaper interface
 
-            x_monitor_port_args = 'xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' ')
+            # x_monitor_port_args = 'xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' ')
+            #
+            # x_monitor_port = subprocess.Popen(x_monitor_port_args,stdout=subprocess.PIPE).stdout
+            #
+            # xrandr = subprocess.Popen('xrandr',stdout=subprocess.PIPE).stdout
+            #
+            # xrandr_grep = subprocess.Popen('grep -e " connected [^(]"'.split(' '),stdin=xrandr,stdout=subprocess.PIPE).stdout
+            #
+            # x_monitor_port = subprocess.Popen('sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' '), stdin=xrandr_grep,stdout=subprocess.PIPE).stdout
+            #
+            # args = ('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor%s/workspace0/last-image -s %s' % (x_monitor_port, current_image_path)).split(' ')
 
-            x_monitor_port = subprocess.Popen(x_monitor_port_args,stdout=subprocess.PIPE).stdout
+            XFCE_SCRIPT = r'''
+monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + current_image_path + '''\nxfdesktop --reload'''
 
-            args = ('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor%s/workspace0/last-image -s %s' % (x_monitor_port, current_image_path)).split(' ')
+            xfce_script_file = open(path.expanduser('~/.xfce_script.sh'), 'w')
 
-            subprocess.Popen(args)
+            xfce_script_file.truncate()
 
-            subprocess.Popen(['xfdesktop','--reload'])
+            xfce_script_file.write(XFCE_SCRIPT)
+
+            subprocess.Popen(['sh', path.abspath(path.expanduser('~/.xfce_script.sh'))])
 
         elif desktop_env=='razor-qt':
 
@@ -200,7 +215,7 @@ def set_wallpaper(image, img_format):
 
             try:
 
-                if desktop_conf.has_option('razor',config_option): #only replacing a value
+                if desktop_conf.has_option('razor',config_option):  # only replacing a value
 
                     desktop_conf.set('razor',config_option,current_image_path)
 
