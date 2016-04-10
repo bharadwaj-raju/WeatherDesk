@@ -150,6 +150,8 @@ if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
 
 def check_if_all_files_exist(time=False):
 
+    all_exist = True
+
     if time:
 
         required_files = ['evening-normal', 'day-normal', 'night-normal',
@@ -167,9 +169,11 @@ def check_if_all_files_exist(time=False):
 
         if not path.isfile(path.join(walls_dir, (i + FILE_FORMAT))):
 
-            return False
+            all_exist = False
 
-    return True
+            stderr.write(path.join(walls_dir, (i + FILE_FORMAT)) + '\n')
+
+    return all_exist
 
 
 while True:

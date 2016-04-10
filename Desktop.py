@@ -167,49 +167,49 @@ def set_wallpaper(image, img_format):
 
         elif desktop_env=='xfce4':
 
-            if first_run:
-                args0 = ['xfconf-query', '-c', 'xfce4-desktop', '-p', '/backdrop/screen0/monitor0/image-path', '-s', current_image_path]
-                args1 = ['xfconf-query', '-c', 'xfce4-desktop', '-p', '/backdrop/screen0/monitor0/image-style', '-s', '3']
-                args2 = ['xfconf-query', '-c', 'xfce4-desktop', '-p', '/backdrop/screen0/monitor0/image-show', '-s', 'true']
-                subprocess.Popen(args0)
-                subprocess.Popen(args1)
-                subprocess.Popen(args2)
-            args = ['xfdesktop','--reload']
+            # XFCE4's image property is not image-path but last-image (What?)
+            # Only GNOME seems to have a sane wallpaper interface
+
+            x_monitor_port_args = 'xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/"'.split(' ')
+
+            x_monitor_port = subprocess.Popen(x_monitor_port_args,stdout=subprocess.PIPE).stdout
+
+            args = ('xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor%s/workspace0/last-image -s %s' % (x_monitor_port, current_image_path)).split(' ')
+
             subprocess.Popen(args)
+
+            subprocess.Popen(['xfdesktop','--reload'])
 
         elif desktop_env=='razor-qt':
 
-            if first_run:
+            desktop_conf = configparser.ConfigParser()
+            # Development version
 
-                desktop_conf = configparser.ConfigParser()
-                # Development version
+            desktop_conf_file = path.join(get_config_dir('razor'),'desktop.conf')
 
-                desktop_conf_file = path.join(get_config_dir('razor'),'desktop.conf')
+            if os.path.isfile(desktop_conf_file):
 
-                if os.path.isfile(desktop_conf_file):
+                config_option = r'screens\1\desktops\1\wallpaper'
 
-                    config_option = r'screens\1\desktops\1\wallpaper'
+            else:
 
-                else:
+                desktop_conf_file = path.join(path.expanduser('~'),'.razor/desktop.conf')
+                config_option = r'desktops\1\wallpaper'
 
-                    desktop_conf_file = path.join(path.expanduser('~'),'.razor/desktop.conf')
-                    config_option = r'desktops\1\wallpaper'
+            desktop_conf.read(os.path.join(desktop_conf_file))
 
-                desktop_conf.read(os.path.join(desktop_conf_file))
+            try:
 
-                try:
+                if desktop_conf.has_option('razor',config_option): #only replacing a value
 
-                    if desktop_conf.has_option('razor',config_option): #only replacing a value
+                    desktop_conf.set('razor',config_option,current_image_path)
 
-                        desktop_conf.set('razor',config_option,current_image_path)
+                    with codecs.open(desktop_conf_file, 'w', encoding='utf-8', errors='replace') as f:
 
-                        with codecs.open(desktop_conf_file, 'w', encoding='utf-8', errors='replace') as f:
+                        desktop_conf.write(f)
 
-                            desktop_conf.write(f)
+            except: pass
 
-                except: pass
-
-            else: pass
 
         elif desktop_env in ['fluxbox','jwm','openbox','afterstep']:
 
