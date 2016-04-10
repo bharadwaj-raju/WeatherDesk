@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from os import *
 import os
 import sys
 import subprocess
@@ -26,7 +25,7 @@ def get_desktop_environment():
 
     else:
 
-        desktop_session = os.environ.get('DESKTOP_SESSION')
+        desktop_session = environ.get('DESKTOP_SESSION')
 
         if desktop_session is not None:
 
@@ -54,13 +53,13 @@ def get_desktop_environment():
 
             elif desktop_session.startswith('wmaker'): return 'windowmaker'
 
-        if os.environ.get('KDE_FULL_SESSION') == 'true':
+        if environ.get('KDE_FULL_SESSION') == 'true':
 
             return 'kde'
 
-        elif os.environ.get('GNOME_DESKTOP_SESSION_ID'):
+        elif environ.get('GNOME_DESKTOP_SESSION_ID'):
 
-            if not 'deprecated' in os.environ.get('GNOME_DESKTOP_SESSION_ID'):
+            if not 'deprecated' in environ.get('GNOME_DESKTOP_SESSION_ID'):
 
                 return 'gnome2'
 
@@ -91,7 +90,7 @@ def set_wallpaper(image, img_format):
 
     if not img_format.startswith('.'): args.format = ''.join(('.', args.format))
 
-    if not path.isdir(path.expanduser('~/Pictures/WeatherDesk/')): os.mkdir(path.expanduser('~/Pictures/WeatherDesk/'))
+    if not path.isdir(path.expanduser('~/Pictures/WeatherDesk/')): mkdir(path.expanduser('~/Pictures/WeatherDesk/'))
 
     current_image = open(
         path.join(
@@ -202,7 +201,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
             desktop_conf_file = path.join(get_config_dir('razor'),'desktop.conf')
 
-            if os.path.isfile(desktop_conf_file):
+            if path.isfile(desktop_conf_file):
 
                 config_option = r'screens\1\desktops\1\wallpaper'
 
@@ -211,7 +210,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
                 desktop_conf_file = path.join(path.expanduser('~'),'.razor/desktop.conf')
                 config_option = r'desktops\1\wallpaper'
 
-            desktop_conf.read(os.path.join(desktop_conf_file))
+            desktop_conf.read(path.join(desktop_conf_file))
 
             try:
 
@@ -303,13 +302,13 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
 def get_config_dir(app_name):
 
-        if 'XDG_CONFIG_HOME' in os.environ:
+        if 'XDG_CONFIG_HOME' in environ:
 
-            confighome = os.environ['XDG_CONFIG_HOME']
+            confighome = environ['XDG_CONFIG_HOME']
 
-        elif 'APPDATA' in os.environ:  # On Windows
+        elif 'APPDATA' in environ:  # On Windows
 
-            confighome = os.environ['APPDATA']
+            confighome = environ['APPDATA']
 
         else:
 
