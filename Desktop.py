@@ -256,8 +256,6 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
         elif desktop_env == 'windows':
 
-
-
                WIN_SCRIPT = '''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f
 
 rundll32.exe user32.dll,UpdatePerUserSystemParameters
