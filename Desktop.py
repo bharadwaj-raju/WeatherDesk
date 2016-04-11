@@ -25,7 +25,7 @@ def get_desktop_environment():
 
     else:
 
-        desktop_session = environ.get('DESKTOP_SESSION')
+        desktop_session = os.environ.get('DESKTOP_SESSION')
 
         if desktop_session is not None:
 
@@ -53,13 +53,13 @@ def get_desktop_environment():
 
             elif desktop_session.startswith('wmaker'): return 'windowmaker'
 
-        if environ.get('KDE_FULL_SESSION') == 'true':
+        if os.environ.get('KDE_FULL_SESSION') == 'true':
 
             return 'kde'
 
-        elif environ.get('GNOME_DESKTOP_SESSION_ID'):
+        elif os.environ.get('GNOME_DESKTOP_SESSION_ID'):
 
-            if not 'deprecated' in environ.get('GNOME_DESKTOP_SESSION_ID'):
+            if not 'deprecated' in os.environ.get('GNOME_DESKTOP_SESSION_ID'):
 
                 return 'gnome2'
 
@@ -90,19 +90,19 @@ def set_wallpaper(image, img_format):
 
     if not img_format.startswith('.'): args.format = ''.join(('.', args.format))
 
-    if not path.isdir(path.expanduser('~/Pictures/WeatherDesk/')): mkdir(path.expanduser('~/Pictures/WeatherDesk/'))
+    if not os.path.isdir(os.path.expanduser('~/Pictures/WeatherDesk/')): os.mkdir(os.path.expanduser('~/Pictures/WeatherDesk/'))
 
     current_image = open(
-        path.join(
-        path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
+        os.path.join(
+        os.path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
         ), 'w')
 
     current_image.close()
 
     desktop_env = get_desktop_environment()
 
-    current_image_path = path.abspath(path.join(
-    path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
+    current_image_path = os.path.abspath(os.path.join(
+    os.path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
     ))
 
     shutil.copyfile(image, current_image_path)
@@ -176,7 +176,7 @@ def set_wallpaper(image, img_format):
 monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
 xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + current_image_path + '''\nxfdesktop --reload'''
 
-            xfce_script_file = open(path.expanduser('~/.weatherdesk_script.sh'), 'w')
+            xfce_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
             xfce_script_file.truncate()
 
@@ -184,25 +184,25 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
             xfce_script_file.close()
 
-            subprocess.Popen(['sh', path.abspath(path.expanduser('~/.weatherdesk_script.sh'))])
+            subprocess.Popen(['sh', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.sh'))])
 
         elif desktop_env=='razor-qt':
 
             desktop_conf = configparser.ConfigParser()
             # Development version
 
-            desktop_conf_file = path.join(get_config_dir('razor'),'desktop.conf')
+            desktop_conf_file = os.path.join(get_config_dir('razor'),'desktop.conf')
 
-            if path.isfile(desktop_conf_file):
+            if os.path.isfile(desktop_conf_file):
 
                 config_option = r'screens\1\desktops\1\wallpaper'
 
             else:
 
-                desktop_conf_file = path.join(path.expanduser('~'),'.razor/desktop.conf')
+                desktop_conf_file = os.path.join(os.path.expanduser('~'),'.razor/desktop.conf')
                 config_option = r'desktops\1\wallpaper'
 
-            desktop_conf.read(path.join(desktop_conf_file))
+            desktop_conf.read(os.path.join(desktop_conf_file))
 
             try:
 
@@ -256,28 +256,37 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
         elif desktop_env == 'windows':
 
-           import ctypes
 
-           SPI_SETDESKWALLPAPER = 20
-           ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, current_image_path , 0)
+
+               WIN_SCRIPT = '''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f
+
+rundll32.exe user32.dll,UpdatePerUserSystemParameters
+''' % current_image_path
+
+               win_script_file = open(os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
+
+               win_script_file.write(WIN_SCRIPT)
+
+               win_script_file.close()
+
+               subprocess.call([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
 
         elif desktop_env == 'mac':
 
-           try:
+            try:
 
                from appscript import app, mactypes
 
                app('Finder').desktop_picture.set(mactypes.File(current_image_path))
 
-           except ImportError:
+            except ImportError:
 
-               OSX_SCRIPT = '''
-tell application 'Finder' to
+                OSX_SCRIPT = '''tell application 'Finder' to
 set desktop picture to POSIX file '%s'
 end tell
-''' % current_image_path
+                ''' % current_image_path
 
-                osx_script_file = open(path.expanduser('~/.weatherdesk_script.sh'), 'w')
+                osx_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
                 osx_script_file.truncate()
 
@@ -285,7 +294,7 @@ end tell
 
                 osx_script_file.close()
 
-                subprocess.Popen(['/usr/bin/osascript', path.abspath(path.expanduser('~/.weatherdesk_script.sh'))])
+                subprocess.Popen(['/usr/bin/osascript', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.sh'))])
         else:
 
             sys.stderr.write('Error: Failed to set wallpaper. (Desktop not supported)')
@@ -319,8 +328,8 @@ def get_config_dir(app_name):
 
             except ImportError:  # Most likely a Linux/Unix system anyway
 
-                confighome =  path.join(path.expanduser('~'),'.config')
+                confighome =  os.path.join(os.path.expanduser('~'),'.config')
 
-        configdir = path.join(confighome,app_name)
+        configdir = os.path.join(confighome,app_name)
 
         return configdir

@@ -23,7 +23,7 @@ FILE_FORMAT = '.jpg'
 
 city = urlopen('http://ipinfo.io/'
     + urlopen('http://ip.42.pl/short').read().decode('utf-8')
-    + '/city').read().decode('utf-8').rstrip()
+    + '/city').read().decode('utf-8').rstrip().replace(' ', '%20')
 
 arg_parser = argparse.ArgumentParser(
     description='''WeatherDesk - Change the wallpaper based on the weather
@@ -178,7 +178,7 @@ def check_if_all_files_exist(time=False):
 
 while True:
 
-    weather_json_url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+    weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
     weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
 
     weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
