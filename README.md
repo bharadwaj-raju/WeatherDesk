@@ -65,6 +65,8 @@ ______________________|________________
  Snow:                | snow.jpg
  Cloudy:              | cloudy.jpg
  Other:               | normal.jpg
+ 
+ Also add day- or night- or evening- in front of the file name if using with --time.
 
 ```
 
