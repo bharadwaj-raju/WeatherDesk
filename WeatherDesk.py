@@ -41,17 +41,17 @@ arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
     help=str('Specify time (in seconds) to wait before updating. Current: %d' % TIME_WAIT),
     required=False)
 
-arg_parser.add_argument('-t', '--time', action='store_true',
-    help='Use different backgrounds for evening, day and night.',
-    required=False)
+arg_parser.add_argument('-t', '--time', nargs='?',
+    help='Use different backgrounds for different times. See --naming.',
+    type=int, choices=[2, 3, 4], const=3, required=False)
 
 arg_parser.add_argument('-n', '--naming', action='store_true',
     help='Show the image file-naming rules and exit.',
     required=False)
 
-# TODO: Implement day/night variation.
-
 args = arg_parser.parse_args()
+
+if args.time is not None: use_time = True
 
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
@@ -66,30 +66,82 @@ ______________________|________________
  Cloudy:              | cloudy{0}
  Other:               | normal{0}
 
- If using with --time: Add "day-", "night-" or "evening-" in front of filename.
+ If using with --time or --time 3, add:
+ "day-", "night-" or "evening-" in front of filename.
+
+ If using with --time 4, add:
+ "morning-", "day-", "evening-" or "night-"
+
+ If using with --time 2, add:
+ "day-" or "night-"
 '''
 
-def get_time_of_day():
+def get_time_of_day(level=3):
 
     '''
+    For detail level 2:
+    06 to 20: day
+    20 to 06: night
+    '''
+
+    '''
+    For detail level 3:
     06 to 17: day
     17 to 20: evening
-    20 to 6 : night
+    20 to 06: night
+    '''
+
+    '''
+    For detail level 4:
+    06 to 08: morning
+    08 to 17: day
+    17 to 20: evening
+    20 to 06: night
     '''
 
     current_time = datetime.datetime.now()
 
-    if current_time.hour in range(6, 17):
+    if level == 3:
 
-        return 'day'
+        if current_time.hour in range(6, 17):
 
-    elif current_time.hour in range(17, 20):
+            return 'day'
 
-        return 'evening'
+        elif current_time.hour in range(17, 20):
+
+            return 'evening'
+
+        else:
+
+            return 'night'
+
+    elif level == 4:
+
+        if current_time.hour in range(6, 8):
+
+            return 'morning'
+
+        elif current_time.hour in range(8, 17):
+
+            return 'day'
+
+        elif current_time.hour in range(17, 20):
+
+            return 'evening'
+
+        else:
+
+            return 'night'
 
     else:
 
-        return 'night'
+        if current_time.hour in range(6, 20):
+
+            return 'day'
+
+        else:
+
+            return 'night'
 
 def get_file_name(weather_name, time=False):
 
@@ -111,7 +163,7 @@ def get_file_name(weather_name, time=False):
 
     if time:
 
-        return get_time_of_day() + '-' + weather_file
+        return get_time_of_day(args.time) + '-' + weather_file
 
     return weather_file
 
@@ -148,18 +200,38 @@ if args.wait is not None:
 if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
 
 
-def check_if_all_files_exist(time=False):
+def check_if_all_files_exist(time=False, level=3):
 
     all_exist = True
 
     if time:
 
-        required_files = ['evening-normal', 'day-normal', 'night-normal',
-        'evening-rain', 'day-rain', 'night-rain',
-        'evening-snow', 'day-snow', 'night-snow',
-        'evening-thunder', 'day-thunder', 'night-thunder',
-        'evening-wind', 'day-wind', 'night-wind',
-        'evening-cloudy', 'day-cloudy', 'night-cloudy']
+        if args.time == 3:
+
+            required_files = ['evening-normal', 'day-normal', 'night-normal',
+            'evening-rain', 'day-rain', 'night-rain',
+            'evening-snow', 'day-snow', 'night-snow',
+            'evening-thunder', 'day-thunder', 'night-thunder',
+            'evening-wind', 'day-wind', 'night-wind',
+            'evening-cloudy', 'day-cloudy', 'night-cloudy']
+
+        elif args.time == 4:
+
+            required_files = ['morning-normal', 'day-normal','evening-normal' , 'night-normal',
+            'morning-rain', 'evening-rain', 'day-rain', 'night-rain',
+            'morning-snow', 'evening-snow', 'day-snow', 'night-snow',
+            'morning-thunder', 'evening-thunder', 'day-thunder', 'night-thunder',
+            'morning-wind', 'evening-wind', 'day-wind', 'night-wind',
+            'morning-cloudy', 'evening-cloudy', 'day-cloudy', 'night-cloudy']
+
+        else:  # level 2
+
+            required_files = ['day-normal', 'night-normal',
+            'day-rain', 'night-wind',
+            'day-snow', 'night-snow',
+            'day-thunder', 'night-thunder',
+            'day-wind', 'night-wind',
+            'day-cloudy', 'night-cloudy']
 
     else:
 
@@ -183,12 +255,14 @@ while True:
 
     weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
-    if not check_if_all_files_exist(time=args.time):
+    if not check_if_all_files_exist(time=True, level=args.time):
 
-        stderr.write('Not all required files were found.\n %s' % NAMING_RULES.format(FILE_FORMAT))
+        stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(FILE_FORMAT))
 
         exit(1)
 
-    Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=args.time)), FILE_FORMAT)
+    if use_time:
+
+        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)), FILE_FORMAT)
 
     time.sleep(TIME_WAIT)

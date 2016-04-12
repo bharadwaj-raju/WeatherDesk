@@ -31,7 +31,8 @@ $ python3 WeatherDesk.py &
 
 ```sh
 $ python3 WeatherDesk.py --help
-usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds] [-n]
+usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
+                      [-t [{2,3,4}]] [-n]
 
 WeatherDesk - Change the wallpaper based on the weather (Uses the Yahoo!
 Weather API)
@@ -45,7 +46,10 @@ optional arguments:
                         Specify image file format. Current: .jpg
   -w seconds, --wait seconds
                         Specify time (in seconds) to wait before updating.
-                        Current: 3600
+                        Current: 600
+  -t [{2,3,4}], --time [{2,3,4}]
+                        Use different backgrounds for different times. See
+                        --naming.
   -n, --naming          Show the image file-naming rules and exit.
 ```
 
@@ -65,9 +69,15 @@ ______________________|________________
  Snow:                | snow.jpg
  Cloudy:              | cloudy.jpg
  Other:               | normal.jpg
- 
- Also add day- or night- or evening- in front of the file name if using with --time.
 
+ If using with --time or --time 3, add:
+ "day-", "night-" or "evening-" in front of filename.
+
+ If using with --time 4, add:
+ "morning-", "day-", "evening-" or "night-"
+
+ If using with --time 2, add:
+ "day-" or "night-"
 ```
 
 # Note for KDE users
