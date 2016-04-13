@@ -13,7 +13,7 @@ import textwrap
 # taken (and modified a bit) from http://stackoverflow.com/a/21213504/5413945
 # by stackoverflow user Martin Hensen
 
-# get_desktop_environment()
+# get_desktop_environment() and is_running()
 # taken (and modified a bit) from http://stackoverflow.com/a/21213358/5413945
 # by stackoverflow user Martin Hensen
 
@@ -86,32 +86,15 @@ def is_running(process):
 
     return False
 
-def set_wallpaper(image, img_format):
-
-    if not img_format.startswith('.'): args.format = ''.join(('.', args.format))
-
-    if not os.path.isdir(os.path.expanduser('~/Pictures/WeatherDesk/')): os.mkdir(os.path.expanduser('~/Pictures/WeatherDesk/'))
-
-    current_image = open(
-        os.path.join(
-        os.path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
-        ), 'w')
-
-    current_image.close()
+def set_wallpaper(image):
 
     desktop_env = get_desktop_environment()
-
-    current_image_path = os.path.abspath(os.path.join(
-    os.path.expanduser('~'), str('Pictures/WeatherDesk/background' + img_format)
-    ))
-
-    shutil.copyfile(image, current_image_path)
 
     try:
 
         if desktop_env in ['gnome', 'unity', 'cinnamon']:
 
-            uri = 'file://%s' % current_image_path
+            uri = 'file://%s' % image
 
             try:
 
@@ -130,17 +113,17 @@ def set_wallpaper(image, img_format):
 
             try: # MATE >= 1.6
 
-                args = ['gsettings', 'set', 'org.mate.background', 'picture-filename', '%s' % current_image_path]
+                args = ['gsettings', 'set', 'org.mate.background', 'picture-filename', '%s' % image]
                 subprocess.Popen(args)
 
             except: # MATE < 1.6
 
-                args = ['mateconftool-2','-t','string','--set','/desktop/mate/background/picture_filename','%s' % current_image_path]
+                args = ['mateconftool-2','-t','string','--set','/desktop/mate/background/picture_filename','%s' % image]
                 subprocess.Popen(args)
 
         elif desktop_env == 'gnome2':
 
-            args = ['gconftool-2','-t','string','--set','/desktop/gnome/background/picture_filename', '%s' % current_image_path]
+            args = ['gconftool-2','-t','string','--set','/desktop/gnome/background/picture_filename', '%s' % image]
             subprocess.Popen(args)
 
         elif desktop_env == 'kde': pass
@@ -158,13 +141,13 @@ def set_wallpaper(image, img_format):
             # notice the change and update automatically.
 
             # Update: That, too, is gone. KDE users will have to set a
-            # peridically updating slideshow in the ~/WeatherDesk folder.
+            # peridically updating slideshow in a folder.
 
             # Update: Even *that* does not work. Sorry, KDE.
 
         elif desktop_env in ['kde3', 'trinity']:
 
-            args = 'dcop kdesktop KBackgroundIface setWallpaper 0 "%s" 6' % current_image_path
+            args = 'dcop kdesktop KBackgroundIface setWallpaper 0 "%s" 6' % image
             subprocess.Popen(args,shell=True)
 
         elif desktop_env=='xfce4':
@@ -174,7 +157,7 @@ def set_wallpaper(image, img_format):
 
             XFCE_SCRIPT = r'''
 monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + current_image_path + '''\nxfdesktop --reload'''
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload'''
 
             xfce_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
@@ -208,7 +191,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
                 if desktop_conf.has_option('razor',config_option):  # only replacing a value
 
-                    desktop_conf.set('razor',config_option,current_image_path)
+                    desktop_conf.set('razor',config_option,image)
 
                     with codecs.open(desktop_conf_file, 'w', encoding='utf-8', errors='replace') as f:
 
@@ -221,7 +204,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
             try:
 
-                args = ['fbsetbg', current_image_path]
+                args = ['fbsetbg', image]
                 subprocess.Popen(args)
 
             except:
@@ -231,27 +214,27 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
 
         elif desktop_env == 'icewm':
 
-            args = ['icewmbg', current_image_path]
+            args = ['icewmbg', image]
             subprocess.Popen(args)
 
         elif desktop_env == 'blackbox':
 
-            args = ['bsetbg', '-full', current_image_path]
+            args = ['bsetbg', '-full', image]
             subprocess.Popen(args)
 
         elif desktop_env == 'lxde':
 
-            args = 'pcmanfm --set-wallpaper %s --wallpaper-mode=scaled' % current_image_path
+            args = 'pcmanfm --set-wallpaper %s --wallpaper-mode=scaled' % image
             subprocess.Popen(args,shell=True)
 
         elif desktop_env == 'windowmaker':
 
-            args = 'wmsetbg -s -u %s' % current_image_path
+            args = 'wmsetbg -s -u %s' % image
             subprocess.Popen(args,shell=True)
 
         elif desktop_env=='enlightenment':
 
-           args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % current_image_path
+           args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
            subprocess.Popen(args,shell=True)
 
         elif desktop_env == 'windows':
@@ -259,7 +242,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/worksp
                WIN_SCRIPT = '''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f
 
 rundll32.exe user32.dll,UpdatePerUserSystemParameters
-''' % current_image_path
+''' % image
 
                win_script_file = open(os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
 
@@ -275,14 +258,14 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
                from appscript import app, mactypes
 
-               app('Finder').desktop_picture.set(mactypes.File(current_image_path))
+               app('Finder').desktop_picture.set(mactypes.File(image))
 
             except ImportError:
 
                 OSX_SCRIPT = '''tell application 'Finder' to
 set desktop picture to POSIX file '%s'
 end tell
-                ''' % current_image_path
+                ''' % image
 
                 osx_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 

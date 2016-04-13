@@ -287,6 +287,10 @@ while True:
 
     if use_time:
 
-        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)), FILE_FORMAT)
+        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
+
+    else:
+
+        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
 
     time.sleep(TIME_WAIT)
