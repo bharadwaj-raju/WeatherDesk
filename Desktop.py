@@ -309,13 +309,13 @@ end tell
 
 def get_config_dir(app_name):
 
-        if 'XDG_CONFIG_HOME' in environ:
+        if 'XDG_CONFIG_HOME' in os.environ:
 
-            confighome = environ['XDG_CONFIG_HOME']
+            confighome = os.environ['XDG_CONFIG_HOME']
 
-        elif 'APPDATA' in environ:  # On Windows
+        elif 'APPDATA' in os.environ:  # On Windows
 
-            confighome = environ['APPDATA']
+            confighome = os.environ['APPDATA']
 
         else:
 
