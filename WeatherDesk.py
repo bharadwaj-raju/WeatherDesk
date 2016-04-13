@@ -15,16 +15,6 @@ import Desktop
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
-#-- Defaults
-
-TIME_WAIT = 600  # seconds
-
-DEFAULT_WALLS_DIR = path.join(path.expanduser('~') + '/.weatherdesk_walls/')
-
-FILE_FORMAT = '.jpg'
-
-#-- -- Defaults
-
 #-- Arguments
 
 arg_parser = argparse.ArgumentParser(
@@ -36,11 +26,11 @@ arg_parser.add_argument('-d', '--dir', metavar='directory', type=str,
     required=False)
 
 arg_parser.add_argument('-f', '--format', metavar='format', type=str,
-    help=str('Specify image file format. Current: %s' % FILE_FORMAT),
+    help=str('Specify image file format. Current: %s' % file_format),
     required=False)
 
 arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
-    help=str('Specify time (in seconds) to wait before updating. Current: %d' % TIME_WAIT),
+    help=str('Specify time (in seconds) to wait before updating. Current: %d' % wait_time),
     required=False)
 
 arg_parser.add_argument('-t', '--time', nargs='?',
@@ -83,9 +73,9 @@ if args.dir is not None:
 
 else:
 
-    if not path.isdir(DEFAULT_WALLS_DIR):
+    if not path.isdir(path.join(path.expanduser('~'), '.weatherdesk_walls/')):
 
-        mkdir(DEFAULT_WALLS_DIR)
+        mkdir(path.join(path.expanduser('~'), '.weatherdesk_walls/'))
 
         stderr.write('No directory specified. Creating in ' +
         path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
@@ -98,13 +88,15 @@ if args.format is not None:
 
     if not args.format.startswith('.'): args.format = ''.join(('.', args.format))
 
-    FILE_FORMAT = args.format
+    file_format = args.format
 
-if args.wait is not None:
+else: file_format = '.jpg'
 
-    TIME_WAIT = args.wait
+if args.wait is not None: wait_time = args.wait
 
-if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
+else: wait_time = 600  # ten minutes
+
+if args.naming: print(NAMING_RULES.format(file_format)); exit(0)
 
 #-- -- Arguments
 
@@ -200,21 +192,21 @@ def get_time_of_day(level=3):
 
 def get_file_name(weather_name, time=False):
 
-    if 'drizzle' or 'rain' in weather_name: weather_file = 'rain' + FILE_FORMAT
+    if 'drizzle' or 'rain' in weather_name: weather_file = 'rain' + file_format
 
-    if 'thunder' in weather_name: weather_file = 'thunder' + FILE_FORMAT
+    if 'thunder' in weather_name: weather_file = 'thunder' + file_format
 
-    if 'snow' in weather_name: weather_file = 'snow' + FILE_FORMAT
+    if 'snow' in weather_name: weather_file = 'snow' + file_format
 
-    if 'windy' or 'breeze' or 'gale' in weather_name: weather_file = 'wind' + FILE_FORMAT
+    if 'windy' or 'breeze' or 'gale' in weather_name: weather_file = 'wind' + file_format
 
-    if 'haze' or 'mist' or 'dust' in weather_name: weather_file = 'mist' + FILE_FORMAT
+    if 'haze' or 'mist' or 'dust' in weather_name: weather_file = 'mist' + file_format
 
-    if 'calm' or 'clear' or 'fair' in weather_name: weather_file = 'normal' + FILE_FORMAT
+    if 'calm' or 'clear' or 'fair' in weather_name: weather_file = 'normal' + file_format
 
-    if 'cloud' in weather_name: weather_file = 'cloudy' + FILE_FORMAT
+    if 'cloud' in weather_name: weather_file = 'cloudy' + file_format
 
-    else: weather_file = 'normal' + FILE_FORMAT
+    else: weather_file = 'normal' + file_format
 
     if time:
 
@@ -262,11 +254,11 @@ def check_if_all_files_exist(time=False, level=3):
 
     for i in required_files:
 
-        if not path.isfile(path.join(walls_dir, (i + FILE_FORMAT))):
+        if not path.isfile(path.join(walls_dir, (i + file_format))):
 
             all_exist = False
 
-            stderr.write(path.join(walls_dir, (i + FILE_FORMAT)) + '\n')
+            stderr.write(path.join(walls_dir, (i + file_format)) + '\n')
 
     return all_exist
 
@@ -281,7 +273,7 @@ while True:
 
     if not check_if_all_files_exist(time=True, level=args.time):
 
-        stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(FILE_FORMAT))
+        stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
         exit(1)
 
@@ -293,4 +285,4 @@ while True:
 
         Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
 
-    time.sleep(TIME_WAIT)
+    time.sleep(wait_time)
