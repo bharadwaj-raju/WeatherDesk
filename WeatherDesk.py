@@ -15,15 +15,17 @@ import Desktop
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
+#-- Defaults
+
 TIME_WAIT = 600  # seconds
 
 DEFAULT_WALLS_DIR = path.join(path.expanduser('~') + '/.weatherdesk_walls/')
 
 FILE_FORMAT = '.jpg'
 
-city = urlopen('http://ipinfo.io/'
-    + urlopen('http://ip.42.pl/short').read().decode('utf-8')
-    + '/city').read().decode('utf-8').rstrip().replace(' ', '%20')
+#-- -- Defaults
+
+#-- Arguments
 
 arg_parser = argparse.ArgumentParser(
     description='''WeatherDesk - Change the wallpaper based on the weather
@@ -49,9 +51,62 @@ arg_parser.add_argument('-n', '--naming', action='store_true',
     help='Show the image file-naming rules and exit.',
     required=False)
 
+arg_parser.add_argument('-c', '--city', metavar='city name', type=str,
+    help=str('Specify city for weather. If not give, taken from GeoIP.'), nargs='+',
+    required=False)
+
 args = arg_parser.parse_args()
 
+if args.city is not None:
+
+    city = ' '.join(args.city).replace(' ', '%20')
+
+else:
+
+    city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
+
+    city = city['city'].replace(' ', '%20')
+
 if args.time is not None: use_time = True
+
+if args.dir is not None:
+
+    # User provided a directory
+
+    walls_dir = args.dir
+
+    if not path.isdir(walls_dir):
+
+        stderr.write('Invalid directory %s.' % walls_dir)
+
+        exit(1)
+
+else:
+
+    if not path.isdir(DEFAULT_WALLS_DIR):
+
+        mkdir(DEFAULT_WALLS_DIR)
+
+        stderr.write('No directory specified. Creating in ' +
+        path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
+
+        exit(1)
+
+    walls_dir = DEFAULT_WALLS_DIR
+
+if args.format is not None:
+
+    if not args.format.startswith('.'): args.format = ''.join(('.', args.format))
+
+    FILE_FORMAT = args.format
+
+if args.wait is not None:
+
+    TIME_WAIT = args.wait
+
+if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
+
+#-- -- Arguments
 
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
@@ -167,38 +222,6 @@ def get_file_name(weather_name, time=False):
 
     return weather_file
 
-if args.dir is not None:
-
-    # User provided a directory
-
-    walls_dir = args.dir
-
-    if not path.isdir(walls_dir):
-
-        stderr.write('Invalid directory %s.' % walls_dir)
-
-        exit(1)
-
-else:
-
-    if not path.isdir(DEFAULT_WALLS_DIR):
-
-        mkdir(DEFAULT_WALLS_DIR)
-
-    walls_dir = DEFAULT_WALLS_DIR
-
-if args.format is not None:
-
-    if not args.format.startswith('.'): args.format = ''.join(('.', args.format))
-
-    FILE_FORMAT = args.format
-
-if args.wait is not None:
-
-    TIME_WAIT = args.wait
-
-if args.naming: print(NAMING_RULES.format(FILE_FORMAT)); exit(0)
-
 
 def check_if_all_files_exist(time=False, level=3):
 
@@ -251,6 +274,7 @@ def check_if_all_files_exist(time=False, level=3):
 while True:
 
     weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+
     weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
 
     weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
