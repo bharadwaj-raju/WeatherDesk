@@ -22,15 +22,15 @@ arg_parser = argparse.ArgumentParser(
     (Uses the Yahoo! Weather API)''')
 
 arg_parser.add_argument('-d', '--dir', metavar='directory', type=str,
-    help=str('Specify wallpaper directory. Current: %s' % DEFAULT_WALLS_DIR),
+    help=str('Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls'),
     required=False)
 
 arg_parser.add_argument('-f', '--format', metavar='format', type=str,
-    help=str('Specify image file format. Current: %s' % file_format),
+    help=str('Specify image file format. Default: %s' % '.jpg'),
     required=False)
 
 arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
-    help=str('Specify time (in seconds) to wait before updating. Current: %d' % wait_time),
+    help=str('Specify time (in seconds) to wait before updating. Default: %d' % 600),
     required=False)
 
 arg_parser.add_argument('-t', '--time', nargs='?',
@@ -41,8 +41,8 @@ arg_parser.add_argument('-n', '--naming', action='store_true',
     help='Show the image file-naming rules and exit.',
     required=False)
 
-arg_parser.add_argument('-c', '--city', metavar='city name', type=str,
-    help=str('Specify city for weather. If not give, taken from GeoIP.'), nargs='+',
+arg_parser.add_argument('-c', '--city', metavar='name', type=str,
+    help=str('Specify city for weather. If not given, taken from ipinfo.io.'), nargs='+',
     required=False)
 
 args = arg_parser.parse_args()
@@ -82,7 +82,7 @@ else:
 
         exit(1)
 
-    walls_dir = DEFAULT_WALLS_DIR
+    walls_dir = path.join(path.expanduser('~'), '.weatherdesk_walls/')
 
 if args.format is not None:
 

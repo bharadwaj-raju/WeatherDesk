@@ -1,4 +1,5 @@
 # WeatherDesk
+
 Change the wallpaper based on the weather and (optionally) the time.
 
 License: [GNU GPL v3](https://www.gnu.org/licenses/gpl.txt)
@@ -32,7 +33,7 @@ $ python3 WeatherDesk.py &
 ```sh
 $ python3 WeatherDesk.py --help
 usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
-                      [-t [{2,3,4}]] [-n]
+                      [-t [{2,3,4}]] [-n] [-c name [name ...]]
 
 WeatherDesk - Change the wallpaper based on the weather (Uses the Yahoo!
 Weather API)
@@ -40,17 +41,20 @@ Weather API)
 optional arguments:
   -h, --help            show this help message and exit
   -d directory, --dir directory
-                        Specify wallpaper directory. Current:
-                        ~/.weatherdesk_walls/
+                        Specify wallpaper directory. Default:
+                        ~/.weatherdesk_walls
   -f format, --format format
-                        Specify image file format. Current: .jpg
+                        Specify image file format. Default: .jpg
   -w seconds, --wait seconds
                         Specify time (in seconds) to wait before updating.
-                        Current: 600
+                        Default: 600
   -t [{2,3,4}], --time [{2,3,4}]
                         Use different backgrounds for different times. See
                         --naming.
   -n, --naming          Show the image file-naming rules and exit.
+  -c name [name ...], --city name [name ...]
+                        Specify city for weather. If not given, taken from
+                        ipinfo.io.
 ```
 
 ## Naming of Pictures
