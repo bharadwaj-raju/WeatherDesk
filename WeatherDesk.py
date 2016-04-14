@@ -52,19 +52,19 @@ args = arg_parser.parse_args()
 
 def is_connected():
 
-    try:
+	try:
 
-        host = socket.gethostbyname('www.google.com')
+		host = socket.gethostbyname('www.google.com')
 
-        s = socket.create_connection((host, 80), 2)
+		s = socket.create_connection((host, 80), 2)
 
-        return True
+		return True
 
-    except:
+	except:
 
-        pass
+		return False
 
-    return False
+print(is_connected())
 
 if args.city is not None:
 
@@ -73,6 +73,8 @@ if args.city is not None:
 else:
 
     if is_connected():
+
+        print('Is connected - getting city')
 
         city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
 
@@ -286,7 +288,9 @@ def check_if_all_files_exist(time=False, level=3):
 
 while True:
 
-    if not is_connected():
+    if is_connected():
+
+        print('Is connected - getting weather')
 
         weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
@@ -300,12 +304,12 @@ while True:
 
             exit(1)
 
-            if use_time:
+        if use_time:
 
-                Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
+            Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
 
-            else:
+        else:
 
-                Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
+            Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
 
     time.sleep(wait_time)
