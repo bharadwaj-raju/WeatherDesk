@@ -12,6 +12,7 @@ import json
 from sys import exit, stderr
 import argparse
 import Desktop
+import socket
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
@@ -47,15 +48,41 @@ arg_parser.add_argument('-c', '--city', metavar='name', type=str,
 
 args = arg_parser.parse_args()
 
+# Check internet connection
+
+def is_connected():
+
+    try:
+
+        host = socket.gethostbyname(REMOTE_SERVER)
+
+        s = socket.create_connection((host, 80), 2)
+
+        return True
+
+    except:
+
+        pass
+
+    return False
+
+if not is_connected():
+
+    no_internet = True
+
+    stderr.write('No internet connection.')
+
 if args.city is not None:
 
     city = ' '.join(args.city).replace(' ', '%20')
 
 else:
 
-    city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
+    if not no_internet:
 
-    city = city['city'].replace(' ', '%20')
+        city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
+
+        city = city['city'].replace(' ', '%20')
 
 if args.time is not None: use_time = True
 
@@ -265,24 +292,26 @@ def check_if_all_files_exist(time=False, level=3):
 
 while True:
 
-    weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+    if not no_internet:
 
-    weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
+        weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
-    weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
+        weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
 
-    if not check_if_all_files_exist(time=True, level=args.time):
+        weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
-        stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
+        if not check_if_all_files_exist(time=True, level=args.time):
 
-        exit(1)
+            stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
-    if use_time:
+            exit(1)
 
-        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
+            if use_time:
 
-    else:
+                Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
 
-        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
+            else:
+
+                Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
 
     time.sleep(wait_time)
