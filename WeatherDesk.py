@@ -66,19 +66,13 @@ def is_connected():
 
     return False
 
-if not is_connected():
-
-    no_internet = True
-
-    stderr.write('No internet connection.')
-
 if args.city is not None:
 
     city = ' '.join(args.city).replace(' ', '%20')
 
 else:
 
-    if not no_internet:
+    if is_connected():
 
         city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
 
@@ -292,7 +286,7 @@ def check_if_all_files_exist(time=False, level=3):
 
 while True:
 
-    if not no_internet:
+    if not is_connected():
 
         weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
