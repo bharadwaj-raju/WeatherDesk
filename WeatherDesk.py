@@ -54,7 +54,7 @@ def is_connected():
 
     try:
 
-        host = socket.gethostbyname(REMOTE_SERVER)
+        host = socket.gethostbyname('www.google.com')
 
         s = socket.create_connection((host, 80), 2)
 
