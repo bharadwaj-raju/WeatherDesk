@@ -16,6 +16,31 @@ import socket
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
+
+NAMING_RULES = '''
+This is how to name files in the wallpaper directory:\n
+
+       WEATHER        |    FILENAME
+______________________|________________
+ Clear, Calm, Fair:   | normal{0}
+ Thunderstorm:        | thunder{0}
+ Windy, Breeze, Gale: | wind{0}
+ Drizzle, Rain:       | rain{0}
+ Snow:                | snow{0}
+ Cloudy:              | cloudy{0}
+ Other:               | normal{0}
+
+ If using with --time or --time 3, add:
+ "day-", "night-" or "evening-" in front of filename.
+
+ If using with --time 4, add:
+ "morning-", "day-", "evening-" or "night-"
+
+ If using with --time 2, add:
+ "day-" or "night-"
+'''
+
+
 #-- Arguments
 
 arg_parser = argparse.ArgumentParser(
@@ -118,29 +143,6 @@ else: wait_time = 600  # ten minutes
 if args.naming: print(NAMING_RULES.format(file_format)); exit(0)
 
 #-- -- Arguments
-
-NAMING_RULES = '''
-This is how to name files in the wallpaper directory:\n
-
-       WEATHER        |    FILENAME
-______________________|________________
- Clear, Calm, Fair:   | normal{0}
- Thunderstorm:        | thunder{0}
- Windy, Breeze, Gale: | wind{0}
- Drizzle, Rain:       | rain{0}
- Snow:                | snow{0}
- Cloudy:              | cloudy{0}
- Other:               | normal{0}
-
- If using with --time or --time 3, add:
- "day-", "night-" or "evening-" in front of filename.
-
- If using with --time 4, add:
- "morning-", "day-", "evening-" or "night-"
-
- If using with --time 2, add:
- "day-" or "night-"
-'''
 
 def get_time_of_day(level=3):
 
