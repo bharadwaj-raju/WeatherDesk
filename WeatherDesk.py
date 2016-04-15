@@ -4,7 +4,7 @@
 
 # Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
 
-from urllib.request import urlopen
+import urllib.request import urlopen
 from os import system, path, mkdir, walk
 import time
 import datetime
@@ -73,33 +73,21 @@ arg_parser.add_argument('-c', '--city', metavar='name', type=str,
 
 args = arg_parser.parse_args()
 
-# Check internet connection
-
-def is_connected():
-
-	try:
-
-		host = socket.gethostbyname('www.google.com')
-
-		s = socket.create_connection((host, 80), 2)
-
-		return True
-
-	except:
-
-		return False
-
 if args.city is not None:
 
     city = ' '.join(args.city).replace(' ', '%20')
 
 else:
 
-    if is_connected():
+    try:
 
         city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
 
         city = city['city'].replace(' ', '%20')
+
+    except:
+
+        pass
 
 if args.time is not None: use_time = True
 
@@ -286,7 +274,7 @@ def check_if_all_files_exist(time=False, level=3):
 
 while True:
 
-    if is_connected():
+    try:
 
         weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
@@ -307,5 +295,9 @@ while True:
         else:
 
             Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
+
+    except:
+
+        pass
 
     time.sleep(wait_time)
