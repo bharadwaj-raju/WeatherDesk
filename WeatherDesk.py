@@ -90,6 +90,7 @@ else:
         pass
 
 if args.time is not None: use_time = True
+else: use_time = False
 
 if args.dir is not None:
 
@@ -288,13 +289,7 @@ while True:
 
             exit(1)
 
-        if use_time:
-
-            Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=True)))
-
-        else:
-
-            Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=False)))
+        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=use_time)))
 
     except:
 
