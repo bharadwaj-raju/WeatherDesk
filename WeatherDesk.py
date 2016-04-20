@@ -282,7 +282,7 @@ while True:
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
-        if not check_if_all_files_exist(time=True, level=args.time):
+        if not check_if_all_files_exist(time=use_time, level=args.time):
 
             stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
