@@ -155,9 +155,14 @@ def set_wallpaper(image):
             # XFCE4's image property is not image-path but last-image (What?)
             # Only GNOME seems to have a sane wallpaper interface
 
+            # Update: the monitor id thing seems to be changed in
+            # XFCE 4.12 to just monitor0 instead of monitorVGA1 or something
+            # So now we need to do both.
+
             XFCE_SCRIPT = r'''
 monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload'''
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload'''
 
             xfce_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
