@@ -209,13 +209,13 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
 
             try:
 
-                args = ['fbsetbg', image]
+                args = ['feh','--bg-fill', image]
                 subprocess.Popen(args)
 
             except:
 
-                sys.stderr.write('Error: Failed to set wallpaper with fbsetbg!')
-                sys.stderr.write('Please make sre that You have fbsetbg installed.')
+                sys.stderr.write('Error: Failed to set wallpaper with feh!')
+                sys.stderr.write('Please make sre that You have feh installed.')
 
         elif desktop_env == 'icewm':
 
