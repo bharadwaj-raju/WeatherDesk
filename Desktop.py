@@ -209,7 +209,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
 
             try:
 
-                args = ['feh','--bg-fill', image]
+                args = ['feh','--bg-scale', image]
                 subprocess.Popen(args)
 
             except:
