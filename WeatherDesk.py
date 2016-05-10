@@ -5,14 +5,13 @@
 # Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
 
 from urllib.request import urlopen
-from os import system, path, mkdir, walk
+from os import system, path, mkdir
 import time
 import datetime
 import json
 from sys import exit, stderr
 import argparse
 import Desktop
-import socket
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
