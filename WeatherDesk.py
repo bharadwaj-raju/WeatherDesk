@@ -5,7 +5,7 @@
 # Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
 
 from urllib.request import urlopen
-from os import system, path, mkdir
+from os import path, mkdir
 import time
 import datetime
 import json
