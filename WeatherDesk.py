@@ -44,22 +44,28 @@ ______________________|________________
 
 arg_parser = argparse.ArgumentParser(
     description='''WeatherDesk - Change the wallpaper based on the weather
-    (Uses the Yahoo! Weather API)''')
+    (Uses the Yahoo! Weather API)''', formatter_class=argparse.RawTextHelpFormatter)
 
 arg_parser.add_argument('-d', '--dir', metavar='directory', type=str,
-    help=str('Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls'),
+    help='Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls',
     required=False)
 
 arg_parser.add_argument('-f', '--format', metavar='format', type=str,
-    help=str('Specify image file format. Default: %s' % '.jpg'),
+    help='Specify image file format. Default: %s' % '.jpg',
     required=False)
 
 arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
-    help=str('Specify time (in seconds) to wait before updating. Default: %d' % 600),
+    help='Specify time (in seconds) to wait before updating. Default: %d' % 600,
     required=False)
 
 arg_parser.add_argument('-t', '--time', nargs='?',
-    help='Use different backgrounds for different times. See --naming.',
+    help='''Use different backgrounds for different times.\n
+Variations:
+  2 = day/night
+  3 = day/evening/night [Default]
+  4 = morning/day/evening/night
+
+See --naming.''',
     type=int, choices=[2, 3, 4], const=3, required=False)
 
 arg_parser.add_argument('-n', '--naming', action='store_true',

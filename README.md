@@ -30,59 +30,59 @@ $ python3 WeatherDesk.py &
 
 ## Options
 
-```sh
-$ python3 WeatherDesk.py --help
-usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
-                      [-t [{2,3,4}]] [-n] [-c name [name ...]]
+    $ python3 WeatherDesk.py --help
+    usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
+                          [-t [{2,3,4}]] [-n] [-c name [name ...]]
 
-WeatherDesk - Change the wallpaper based on the weather (Uses the Yahoo!
-Weather API)
+    WeatherDesk - Change the wallpaper based on the weather
+        (Uses the Yahoo! Weather API)
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -d directory, --dir directory
-                        Specify wallpaper directory. Default:
-                        ~/.weatherdesk_walls
-  -f format, --format format
-                        Specify image file format. Default: .jpg
-  -w seconds, --wait seconds
-                        Specify time (in seconds) to wait before updating.
-                        Default: 600
-  -t [{2,3,4}], --time [{2,3,4}]
-                        Use different backgrounds for different times. See
-                        --naming.
-  -n, --naming          Show the image file-naming rules and exit.
-  -c name [name ...], --city name [name ...]
-                        Specify city for weather. If not given, taken from
-                        ipinfo.io.
-```
+    optional arguments:
+      -h, --help            show this help message and exit
+      -d directory, --dir directory
+                            Specify wallpaper directory. Default: ~/.weatherdesk_walls
+      -f format, --format format
+                            Specify image file format. Default: .jpg
+      -w seconds, --wait seconds
+                            Specify time (in seconds) to wait before updating. Default: 600
+      -t [{2,3,4}], --time [{2,3,4}]
+                            Use different backgrounds for different times.
+
+                            Variations:
+                              2 = day/night
+                              3 = day/evening/night [Default]
+                              4 = morning/day/evening/night
+
+                            See --naming.
+      -n, --naming          Show the image file-naming rules and exit.
+      -c name [name ...], --city name [name ...]
+                            Specify city for weather. If not given, taken from ipinfo.io.
+
 
 ## Naming of Pictures
 
-```sh
-$ python3 WeatherDesk.py --naming
-This is how to name files in the wallpaper directory:
+    $ python3 WeatherDesk.py --naming
+    This is how to name files in the wallpaper directory:
 
 
-       WEATHER        |    FILENAME
-______________________|________________
- Clear, Calm, Fair:   | normal.jpg
- Thunderstorm:        | thunder.jpg
- Windy, Breeze, Gale: | wind.jpg
- Drizzle, Rain:       | rain.jpg
- Snow:                | snow.jpg
- Cloudy:              | cloudy.jpg
- Other:               | normal.jpg
+           WEATHER        |    FILENAME
+    ______________________|________________
+     Clear, Calm, Fair:   | normal.jpg
+     Thunderstorm:        | thunder.jpg
+     Windy, Breeze, Gale: | wind.jpg
+     Drizzle, Rain:       | rain.jpg
+     Snow:                | snow.jpg
+     Cloudy:              | cloudy.jpg
+     Other:               | normal.jpg
 
- If using with --time or --time 3, add:
- "day-", "night-" or "evening-" in front of filename.
+     If using with --time or --time 3, add:
+     "day-", "night-" or "evening-" in front of filename.
 
- If using with --time 4, add:
- "morning-", "day-", "evening-" or "night-"
+     If using with --time 4, add:
+     "morning-", "day-", "evening-" or "night-"
 
- If using with --time 2, add:
- "day-" or "night-"
-```
+     If using with --time 2, add:
+     "day-" or "night-"
 
 # Note for KDE users
 
