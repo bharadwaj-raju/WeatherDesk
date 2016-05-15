@@ -4,12 +4,12 @@
 
 # Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
 
-from urllib.request import urlopen
-from os import path, mkdir
+import urllib.request
+import os
 import time
 import datetime
 import json
-from sys import exit, stderr
+import sys
 import argparse
 import Desktop
 
@@ -86,7 +86,7 @@ else:
 
     try:
 
-        city = json.loads(urlopen('http://ipinfo.io/json').read().decode('utf-8'))
+        city = json.loads(urllib.request.urlopen('http://ipinfo.io/json').read().decode('utf-8'))
 
         city = city['city'].replace(' ', '%20')
 
@@ -103,24 +103,24 @@ if args.dir is not None:
 
     walls_dir = args.dir
 
-    if not path.isdir(walls_dir):
+    if not os.path.isdir(walls_dir):
 
-        stderr.write('Invalid directory %s.' % walls_dir)
+        sys.stderr.write('Invalid directory %s.' % walls_dir)
 
-        exit(1)
+        sys.exit(1)
 
 else:
 
-    if not path.isdir(path.join(path.expanduser('~'), '.weatherdesk_walls/')):
+    if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/')):
 
-        mkdir(path.join(path.expanduser('~'), '.weatherdesk_walls/'))
+        os.mkdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/'))
 
-        stderr.write('No directory specified. Creating in ' +
-        path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
+        sys.stderr.write('No directory specified. Creating in ' +
+        os.path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
 
-        exit(1)
+        sys.exit(1)
 
-    walls_dir = path.join(path.expanduser('~'), '.weatherdesk_walls/')
+    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/')
 
 if args.format is not None:
 
@@ -134,7 +134,7 @@ if args.wait is not None: wait_time = args.wait
 
 else: wait_time = 600  # ten minutes
 
-if args.naming: print(NAMING_RULES.format(file_format)); exit(0)
+if args.naming: print(NAMING_RULES.format(file_format)); sys.exit(0)
 
 #-- -- Arguments
 
@@ -269,11 +269,11 @@ def check_if_all_files_exist(time=False, level=3):
 
     for i in required_files:
 
-        if not path.isfile(path.join(walls_dir, (i + file_format))):
+        if not os.path.isfile(os.path.join(walls_dir, (i + file_format))):
 
             all_exist = False
 
-            stderr.write(path.join(walls_dir, (i + file_format)) + '\n')
+            sys.stderr.write(os.path.join(walls_dir, (i + file_format)) + '\n')
 
     return all_exist
 
@@ -284,17 +284,17 @@ while True:
 
         weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
-        weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
+        weather_json = json.loads(urllib.request.urlopen(weather_json_url).read().decode('utf-8'))
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
         if not check_if_all_files_exist(time=use_time, level=args.time):
 
-            stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
+            sys.stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
-            exit(1)
+            sys.exit(1)
 
-        Desktop.set_wallpaper(path.join(walls_dir, get_file_name(weather, time=use_time)))
+        Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
     except:
 
