@@ -215,8 +215,6 @@ def get_file_name(weather_name, time=False):
 
     if 'windy' or 'breeze' or 'gale' in weather_name: weather_file = 'wind' + file_format
 
-    if 'haze' or 'mist' or 'dust' in weather_name: weather_file = 'mist' + file_format
-
     if 'calm' or 'clear' or 'fair' in weather_name: weather_file = 'normal' + file_format
 
     if 'cloud' in weather_name: weather_file = 'cloudy' + file_format
