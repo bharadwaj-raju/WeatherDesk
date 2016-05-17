@@ -232,38 +232,25 @@ def check_if_all_files_exist(time=False, level=3):
 
     all_exist = True
 
+    required_files = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
+
     if time:
 
         if args.time == 3:
 
-            required_files = ['evening-normal', 'day-normal', 'night-normal',
-            'evening-rain', 'day-rain', 'night-rain',
-            'evening-snow', 'day-snow', 'night-snow',
-            'evening-thunder', 'day-thunder', 'night-thunder',
-            'evening-wind', 'day-wind', 'night-wind',
-            'evening-cloudy', 'day-cloudy', 'night-cloudy']
+            daytime = ['day', 'evening', 'night']
 
         elif args.time == 4:
 
-            required_files = ['morning-normal', 'day-normal','evening-normal' , 'night-normal',
-            'morning-rain', 'evening-rain', 'day-rain', 'night-rain',
-            'morning-snow', 'evening-snow', 'day-snow', 'night-snow',
-            'morning-thunder', 'evening-thunder', 'day-thunder', 'night-thunder',
-            'morning-wind', 'evening-wind', 'day-wind', 'night-wind',
-            'morning-cloudy', 'evening-cloudy', 'day-cloudy', 'night-cloudy']
+            daytime = ['morning', 'day', 'evening', 'night']
 
         else:  # level 2
 
-            required_files = ['day-normal', 'night-normal',
-            'day-rain', 'night-wind',
-            'day-snow', 'night-snow',
-            'day-thunder', 'night-thunder',
-            'day-wind', 'night-wind',
-            'day-cloudy', 'night-cloudy']
+            daytime = ['day', 'night']
 
-    else:
-
-        required_files = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
+        required_files = [moment + "-" + weather
+            for moment in daytime
+            for weather in required_files]
 
     for i in required_files:
 
@@ -291,7 +278,7 @@ while True:
             sys.stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
             sys.exit(1)
-            
+
         print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
         Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
