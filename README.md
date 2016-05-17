@@ -26,6 +26,10 @@ Run
 $ python3 WeatherDesk.py &
 ```
 
+### Note for OS X users
+
+Please disable the auto-reset/change of wallpaper in the  "Desktop and Screen Saver" preferences.
+
 # Usage
 
 ## Options
