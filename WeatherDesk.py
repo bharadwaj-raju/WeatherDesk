@@ -248,7 +248,7 @@ def check_if_all_files_exist(time=False, level=3):
 
             daytime = ['day', 'night']
 
-        required_files = [moment + "-" + weather
+        required_files = [moment + '-' + weather
             for moment in daytime
             for weather in required_files]
 
