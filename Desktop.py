@@ -32,7 +32,7 @@ def get_desktop_environment():
             desktop_session = desktop_session.lower()
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
-                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde']:
+                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon']:
 
                 return desktop_session
 
@@ -92,7 +92,7 @@ def set_wallpaper(image):
 
     try:
 
-        if desktop_env in ['gnome', 'unity', 'cinnamon']:
+        if desktop_env in ['gnome', 'unity', 'cinnamon', 'pantheon']:
 
             uri = 'file://%s' % image
 
@@ -237,7 +237,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
             args = 'wmsetbg -s -u %s' % image
             subprocess.Popen(args,shell=True)
 
-        elif desktop_env=='enlightenment':
+        elif desktop_env == 'enlightenment':
 
            args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
            subprocess.Popen(args,shell=True)
