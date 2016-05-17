@@ -268,7 +268,7 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
             except ImportError:
 
                 OSX_SCRIPT = '''tell application 'Finder' to
-set desktop picture to POSIX file '%s'
+set desktop picture to POSIX file "%s"
 end tell
                 ''' % image
 
