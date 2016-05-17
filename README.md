@@ -30,6 +30,8 @@ $ python3 WeatherDesk.py &
 
 Please disable the auto-reset/change of wallpaper in the  "Desktop and Screen Saver" preferences.
 
+![Disable this](http://i.imgur.com/BFi1GHG.png)
+
 # Usage
 
 ## Options
