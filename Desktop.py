@@ -255,7 +255,7 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
                win_script_file.close()
 
-               subprocess.call([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
+               subprocess.Popen([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
 
         elif desktop_env == 'mac':
 

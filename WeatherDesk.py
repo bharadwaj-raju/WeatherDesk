@@ -111,16 +111,16 @@ if args.dir is not None:
 
 else:
 
-    if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/')):
+    if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')):
 
-        os.mkdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/'))
+        os.mkdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls'))
 
         sys.stderr.write('No directory specified. Creating in ' +
         os.path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
 
         sys.exit(1)
 
-    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls/')
+    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
 
 if args.format is not None:
 
@@ -291,6 +291,8 @@ while True:
             sys.stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
 
             sys.exit(1)
+            
+        print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
         Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
