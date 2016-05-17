@@ -2,6 +2,8 @@
 
 Change the wallpaper based on the weather and (optionally) the time.
 
+![WeatherDesk](http://i.imgur.com/F2Lml2n.png)
+
 License: [GNU GPL v3](https://www.gnu.org/licenses/gpl.txt)
 
 Thanks to StackOverflow user [Martin Hensen](http://stackoverflow.com/users/2118300/martin-hansen) for the `Desktop.py` module. (The functions modified a bit from the original.)
