@@ -272,7 +272,7 @@ set desktop picture to POSIX file "%s"
 end tell
                 ''' % image
 
-                osx_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
+                osx_script_file = open(os.path.expanduser('~/.weatherdesk_script.AppleScript'), 'w')
 
                 osx_script_file.truncate()
 
