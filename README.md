@@ -1,4 +1,4 @@
-# WeatherDesk
+fil# WeatherDesk
 
 Change the wallpaper based on the weather and (optionally) the time.
 
@@ -16,9 +16,20 @@ Thanks to StackOverflow user [Martin Hensen](http://stackoverflow.com/users/2118
 
 - Python 3
 
+- Wallpapers
+
 ## Running
 
 Just run the `WeatherDesk.py` script.
+
+### Wallpapers
+
+You can choose your own custom set, conforming to the [naming rules](#naming-of-pictures).
+Either put them in the default `~/.weatherdesk_walls/` directory or specify a directory with the `--dir` option.
+
+Don't want to go hunting for wallpapers? I recommend [this beautiful set (called FireWatch, named after a game)](http://imgur.com/a/snB5O) (download the set using the ZIP file link given below) made by redditor JuniorNeves.
+
+**A zip download of the FireWatch set, named according to the rules:** [ZIP download](https://github.com/bharadwaj-raju/FireWatch-WeatherDesk-Pack/archive/master.zip). Just extract it into `~/.weatherdesk_walls` (or into any directory and pass its path with `--dir`)
 
 ### In background mode (only for OS X and Linux)
 
