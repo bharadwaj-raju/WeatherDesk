@@ -4,25 +4,53 @@ Change the wallpaper based on the weather and (optionally) the time.
 
 ![WeatherDesk](http://i.imgur.com/F2Lml2n.png)
 
-License: [GNU GPL v3](https://www.gnu.org/licenses/gpl.txt)
-
-Thanks to StackOverflow user [Martin Hensen](http://stackoverflow.com/users/2118300/martin-hansen) for the `Desktop.py` module. (The functions modified a bit from the original.)
+Thanks to [Martin Hansen](http://stackoverflow.com/users/2118300/martin-hansen) for the original `Desktop.py` module.
 
 [![Powered by Yahoo!](https://poweredby.yahoo.com/purple.png)](https://www.yahoo.com/?ilc=401)
 
 # Installation
 
-## Requirements:
+Just download the repository, get some wallpapers (see [the Wallpapers section](#wallpapers)) and run the `WeatherDesk.py` script.
 
-- Python 3
+**NOTE:** If you use OS X, see [the note for OS X users](#note-for-os-x-users).
 
-- Wallpapers
+## Options
 
-## Running
+    $ python3 WeatherDesk.py --help
+    usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
+                          [-t [{2,3,4}]] [-n] [-c name [name ...]]
 
-Just run the `WeatherDesk.py` script.
+    WeatherDesk - Change the wallpaper based on the weather
+        (Uses the Yahoo! Weather API)
 
-### Wallpapers
+    optional arguments:
+      -h, --help            show this help message and exit
+
+      -d directory, --dir directory
+                            Specify wallpaper directory. Default: ~/.weatherdesk_walls
+
+      -f format, --format format
+                            Specify image file format. Default: .jpg
+
+      -w seconds, --wait seconds
+                            Specify time (in seconds) to wait before updating. Default: 600
+
+      -t {2,3,4}, --time {2,3,4}
+                            Use different backgrounds for different times.
+
+                            Variations:
+                              2 = day/night
+                              3 = day/evening/night [Default]
+                              4 = morning/day/evening/night
+
+                            See --naming.
+
+      -n, --naming          Show the image file-naming rules and exit.
+
+      -c name, --city name
+                            Specify city for weather. If not given, taken from ipinfo.io.
+
+## Wallpapers
 
 You can choose your own custom set, conforming to the [naming rules](#naming-of-pictures).
 Either put them in the default `~/.weatherdesk_walls/` directory or specify a directory with the `--dir` option.
@@ -31,7 +59,34 @@ Don't want to go hunting for wallpapers? I recommend [this beautiful set (called
 
 **A zip download of the FireWatch set, named according to the rules:** [ZIP download](https://github.com/bharadwaj-raju/FireWatch-WeatherDesk-Pack/archive/master.zip). Just extract it into `~/.weatherdesk_walls` (or into any directory and pass its path with `--dir`)
 
-### Supported Platforms
+
+## Naming of Pictures
+
+    $ python3 WeatherDesk.py --naming
+    This is how to name files in the wallpaper directory:
+
+
+           WEATHER        |    FILENAME
+    ______________________|________________
+     Clear, Calm, Fair:   | normal.jpg
+     Thunderstorm:        | thunder.jpg
+     Windy, Breeze, Gale: | wind.jpg
+     Drizzle, Rain:       | rain.jpg
+     Snow:                | snow.jpg
+     Cloudy:              | cloudy.jpg
+     Other:               | normal.jpg
+
+     If using with --time or --time 3, add:
+     "day-", "night-" or "evening-" in front of filename.
+
+     If using with --time 4, add:
+     "morning-", "day-", "evening-" or "night-"
+
+     If using with --time 2, add:
+     "day-" or "night-"
+
+
+## Supported Platforms
 
 - Linux
 
@@ -59,7 +114,7 @@ Don't want to go hunting for wallpapers? I recommend [this beautiful set (called
 
 - OS X
 
-### In background mode (only for OS X and Linux)
+## In background mode (only for OS X and Linux)
 
 Run
 
@@ -67,69 +122,13 @@ Run
 $ python3 WeatherDesk.py &
 ```
 
-### Note for OS X users
+## Note for OS X users
 
 Please disable the auto-reset/change of wallpaper in the  "Desktop and Screen Saver" preferences.
 
 ![Disable this](http://i.imgur.com/BFi1GHGm.png)
 
 # Usage
-
-## Options
-
-    $ python3 WeatherDesk.py --help
-    usage: WeatherDesk.py [-h] [-d directory] [-f format] [-w seconds]
-                          [-t [{2,3,4}]] [-n] [-c name [name ...]]
-
-    WeatherDesk - Change the wallpaper based on the weather
-        (Uses the Yahoo! Weather API)
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -d directory, --dir directory
-                            Specify wallpaper directory. Default: ~/.weatherdesk_walls
-      -f format, --format format
-                            Specify image file format. Default: .jpg
-      -w seconds, --wait seconds
-                            Specify time (in seconds) to wait before updating. Default: 600
-      -t [{2,3,4}], --time [{2,3,4}]
-                            Use different backgrounds for different times.
-
-                            Variations:
-                              2 = day/night
-                              3 = day/evening/night [Default]
-                              4 = morning/day/evening/night
-
-                            See --naming.
-      -n, --naming          Show the image file-naming rules and exit.
-      -c name [name ...], --city name [name ...]
-                            Specify city for weather. If not given, taken from ipinfo.io.
-
-
-## Naming of Pictures
-
-    $ python3 WeatherDesk.py --naming
-    This is how to name files in the wallpaper directory:
-
-
-           WEATHER        |    FILENAME
-    ______________________|________________
-     Clear, Calm, Fair:   | normal.jpg
-     Thunderstorm:        | thunder.jpg
-     Windy, Breeze, Gale: | wind.jpg
-     Drizzle, Rain:       | rain.jpg
-     Snow:                | snow.jpg
-     Cloudy:              | cloudy.jpg
-     Other:               | normal.jpg
-
-     If using with --time or --time 3, add:
-     "day-", "night-" or "evening-" in front of filename.
-
-     If using with --time 4, add:
-     "morning-", "day-", "evening-" or "night-"
-
-     If using with --time 2, add:
-     "day-" or "night-"
 
 # Note for KDE users
 

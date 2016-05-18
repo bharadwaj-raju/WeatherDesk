@@ -11,11 +11,11 @@ import textwrap
 
 # set_wallpaper() and get_config_dir()
 # taken (and modified a bit) from http://stackoverflow.com/a/21213504/5413945
-# by stackoverflow user Martin Hensen
+# by stackoverflow user Martin Hansen
 
 # get_desktop_environment() and is_running()
 # taken (and modified a bit) from http://stackoverflow.com/a/21213358/5413945
-# by stackoverflow user Martin Hensen
+# by stackoverflow user Martin Hansen
 
 def get_desktop_environment():
 
