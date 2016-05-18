@@ -283,7 +283,11 @@ while True:
 
         Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
-    except:
+    except Exception as e:
+
+        error_msg = e
+
+        print(error_msg)
 
         pass
 
