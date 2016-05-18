@@ -52,10 +52,12 @@ Just download the repository, get some wallpapers (see [the Wallpapers section](
 
 ## Wallpapers
 
-You can choose your own custom set, conforming to the [naming rules](#naming-of-pictures).
+**You can choose your own custom set**, conforming to the [naming rules](#naming-of-pictures).
 Either put them in the default `~/.weatherdesk_walls/` directory or specify a directory with the `--dir` option.
 
-Don't want to go hunting for wallpapers? I recommend [this beautiful set (called FireWatch, named after a game)](http://imgur.com/a/snB5O) (download the set using the ZIP file link given below) made by redditor JuniorNeves.
+### Ready-to-Go wallpaper set
+
+**Don't want to go hunting for wallpapers?** I recommend [this beautiful set (called FireWatch, named after a game)](http://imgur.com/a/snB5O) (download the set using the ZIP file link given below) made by redditor JuniorNeves.
 
 **A zip download of the FireWatch set, named according to the rules:** [ZIP download](https://github.com/bharadwaj-raju/FireWatch-WeatherDesk-Pack/archive/master.zip). Just extract it into `~/.weatherdesk_walls` (or into any directory and pass its path with `--dir`)
 
