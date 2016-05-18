@@ -128,9 +128,7 @@ Please disable the auto-reset/change of wallpaper in the  "Desktop and Screen Sa
 
 ![Disable this](http://i.imgur.com/BFi1GHGm.png)
 
-# Usage
-
-# Note for KDE users
+## Note for KDE users
 
 Since KDE 4 and above does not provide an interface to change the desktop background, KDE 4 and above is not supported.
 
