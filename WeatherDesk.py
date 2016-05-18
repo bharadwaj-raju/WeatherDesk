@@ -92,7 +92,7 @@ else:
 
     except:
 
-        pass
+        sys.stderr.write('City detection failed!')
 
 if args.time is not None: use_time = True
 else: use_time = False
