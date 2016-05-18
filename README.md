@@ -1,4 +1,4 @@
-fil# WeatherDesk
+# WeatherDesk
 
 Change the wallpaper based on the weather and (optionally) the time.
 
@@ -30,6 +30,34 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
 Don't want to go hunting for wallpapers? I recommend [this beautiful set (called FireWatch, named after a game)](http://imgur.com/a/snB5O) (download the set using the ZIP file link given below) made by redditor JuniorNeves.
 
 **A zip download of the FireWatch set, named according to the rules:** [ZIP download](https://github.com/bharadwaj-raju/FireWatch-WeatherDesk-Pack/archive/master.zip). Just extract it into `~/.weatherdesk_walls` (or into any directory and pass its path with `--dir`)
+
+### Supported Platforms
+
+- Linux
+
+  - Gnome 3
+  - Pantheon
+  - Unity
+  - Gnome 2
+  - Mate
+  - Cinnamon
+  - Openbox
+  - XFCE
+  - KDE **3**
+  - Trinity
+  - Fluxbox
+  - Razor-Qt
+  - JWM
+  - AfterStep
+  - IceWM
+  - Blackbox
+  - Windowmaker
+  - Enlightenment
+  - LXDE
+
+- Windows
+
+- OS X
 
 ### In background mode (only for OS X and Linux)
 
