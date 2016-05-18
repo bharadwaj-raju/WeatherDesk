@@ -62,7 +62,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
 **A zip download of the FireWatch set, named according to the rules:** [ZIP download](https://github.com/bharadwaj-raju/FireWatch-WeatherDesk-Pack/archive/master.zip). Just extract it into `~/.weatherdesk_walls` (or into any directory and pass its path with `--dir`)
 
 
-## Naming of Pictures
+### Naming of Pictures
 
     $ python3 WeatherDesk.py --naming
     This is how to name files in the wallpaper directory:
