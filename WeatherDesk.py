@@ -101,7 +101,7 @@ if args.dir is not None:
 
     # User provided a directory
 
-    walls_dir = args.dir
+    walls_dir = os.path.abspath(args.dir)
 
     if not os.path.isdir(walls_dir):
 
