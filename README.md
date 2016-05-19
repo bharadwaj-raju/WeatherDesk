@@ -99,8 +99,10 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - Mate
   - Cinnamon
   - Openbox
-  - i3
+  - LXDE
   - XFCE
+  - LXQt
+  - i3
   - KDE **3**
   - Trinity
   - Fluxbox
@@ -111,7 +113,6 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - Blackbox
   - Windowmaker
   - Enlightenment
-  - LXDE
 
 - Windows
 
