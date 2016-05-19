@@ -122,7 +122,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
 Run
 
 ```sh
-$ python3 WeatherDesk.py &
+$ nohup python3 WeatherDesk.py > /dev/null &
 ```
 
 ## Note for OS X users
