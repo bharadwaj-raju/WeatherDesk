@@ -27,7 +27,6 @@ def get_desktop_environment():
 
         desktop_session = os.environ.get('DESKTOP_SESSION')
 
-
         if desktop_session is None:
 
             desktop_session = os.environ.get('XDG_CURRENT_DESKTOP')
@@ -39,6 +38,12 @@ def get_desktop_environment():
         if desktop_session is not None:
 
             desktop_session = desktop_session.lower()
+
+            # Fix for X-Cinnamon etc
+
+            if desktop_session.startswith('x-'):
+
+                desktop_session = desktop_session.replace('x-', '')
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
                                    'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon']:
