@@ -31,7 +31,7 @@ def get_desktop_environment():
 
             desktop_session = os.environ.get('XDG_CURRENT_DESKTOP')
 
-        elif desktop_session.lower == 'default':
+        elif desktop_session.lower() == 'default':
 
             desktop_session = os.environ.get('XDG_CURRENT_DESKTOP')
 
