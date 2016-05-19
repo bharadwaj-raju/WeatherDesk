@@ -46,7 +46,7 @@ def get_desktop_environment():
                 desktop_session = desktop_session.replace('x-', '')
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
-                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon']:
+                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon', 'i3']:
 
                 return desktop_session
 
@@ -219,7 +219,7 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
             except: pass
 
 
-        elif desktop_env in ['fluxbox','jwm','openbox','afterstep']:
+        elif desktop_env in ['fluxbox','jwm','openbox','afterstep', 'i3']:
 
             try:
 
