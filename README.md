@@ -99,6 +99,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - Mate
   - Cinnamon
   - Openbox
+  - i3
   - XFCE
   - KDE **3**
   - Trinity
