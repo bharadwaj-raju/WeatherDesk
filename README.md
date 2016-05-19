@@ -68,15 +68,15 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
     This is how to name files in the wallpaper directory:
 
 
-           WEATHER        |    FILENAME
-    ______________________|________________
-     Clear, Calm, Fair:   | normal.jpg
-     Thunderstorm:        | thunder.jpg
-     Windy, Breeze, Gale: | wind.jpg
-     Drizzle, Rain:       | rain.jpg
-     Snow:                | snow.jpg
-     Cloudy:              | cloudy.jpg
-     Other:               | normal.jpg
+           WEATHER           |    FILENAME
+    _________________________|________________
+     Clear, Calm, Fair:      | normal.jpg
+     Thunderstorm:           | thunder.jpg
+     Windy, Breeze, Gale:    | wind.jpg
+     Drizzle, Rain, Showers: | rain.jpg
+     Snow:                   | snow.jpg
+     Cloudy:                 | cloudy.jpg
+     Other:                  | normal.jpg
 
      If using with --time or --time 3, add:
      "day-", "night-" or "evening-" in front of filename.

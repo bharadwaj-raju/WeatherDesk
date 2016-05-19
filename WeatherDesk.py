@@ -19,15 +19,15 @@ __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
 
-       WEATHER        |    FILENAME
-______________________|________________
- Clear, Calm, Fair:   | normal{0}
- Thunderstorm:        | thunder{0}
- Windy, Breeze, Gale: | wind{0}
- Drizzle, Rain:       | rain{0}
- Snow:                | snow{0}
- Cloudy:              | cloudy{0}
- Other:               | normal{0}
+       WEATHER           |    FILENAME
+_________________________|________________
+ Clear, Calm, Fair:      | normal{0}
+ Thunderstorm:           | thunder{0}
+ Windy, Breeze, Gale:    | wind{0}
+ Drizzle, Rain, Showers: | rain{0}
+ Snow:                   | snow{0}
+ Cloudy:                 | cloudy{0}
+ Other:                  | normal{0}
 
  If using with --time or --time 3, add:
  "day-", "night-" or "evening-" in front of filename.
@@ -207,19 +207,26 @@ def get_time_of_day(level=3):
 
 def get_file_name(weather_name, time=False):
 
-    if 'drizzle' or 'rain' in weather_name: weather_file = 'rain' + file_format
+    if 'drizzle' or 'rain' or 'showers' in weather_name: 
+        weather_file = 'rain' + file_format
 
-    if 'thunder' in weather_name: weather_file = 'thunder' + file_format
+    elif 'thunder' in weather_name: 
+        weather_file = 'thunder' + file_format
 
-    if 'snow' in weather_name: weather_file = 'snow' + file_format
+    elif 'snow' in weather_name: 
+        weather_file = 'snow' + file_format
 
-    if 'windy' or 'breeze' or 'gale' in weather_name: weather_file = 'wind' + file_format
+    elif 'windy' or 'breeze' or 'gale' in weather_name: 
+        weather_file = 'wind' + file_format
 
-    if 'calm' or 'clear' or 'fair' in weather_name: weather_file = 'normal' + file_format
+    elif 'calm' or 'clear' or 'fair' in weather_name: 
+        weather_file = 'normal' + file_format
 
-    if 'cloud' in weather_name: weather_file = 'cloudy' + file_format
+    elif 'cloud' in weather_name: 
+        weather_file = 'cloudy' + file_format
 
-    else: weather_file = 'normal' + file_format
+    else: 
+        weather_file = 'normal' + file_format
 
     if time:
 
