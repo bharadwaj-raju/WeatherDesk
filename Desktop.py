@@ -280,7 +280,7 @@ end tell
 
                 osx_script_file.close()
 
-                subprocess.Popen(['/usr/bin/osascript', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.sh'))])
+                subprocess.Popen(['/usr/bin/osascript', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.AppleScript'))])
         else:
 
             sys.stderr.write('Error: Failed to set wallpaper. (Desktop not supported)')
