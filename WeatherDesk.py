@@ -92,7 +92,7 @@ else:
 
     except:
 
-        sys.stderr.write('City detection failed!')
+        pass
 
 if args.time is not None: use_time = True
 else: use_time = False
@@ -283,11 +283,7 @@ while True:
 
         Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
-    except Exception as e:
-
-        error_msg = e
-
-        print(error_msg)
+    except:
 
         pass
 
