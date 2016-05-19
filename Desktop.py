@@ -46,7 +46,8 @@ def get_desktop_environment():
                 desktop_session = desktop_session.replace('x-', '')
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
-                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon', 'i3']:
+                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon',
+                                   'i3', 'lxqt']:
 
                 return desktop_session
 
@@ -244,17 +245,22 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
         elif desktop_env == 'lxde':
 
             args = 'pcmanfm --set-wallpaper %s --wallpaper-mode=scaled' % image
-            subprocess.Popen(args,shell=True)
+            subprocess.Popen(args, shell=True)
+
+        elif desktop_env == 'lxqt':
+
+            args = 'pcmanfm-qt --set-wallpaper %s --wallpaper-mode=scaled' % image
+            subprocess.Popen(args, shell=True)
 
         elif desktop_env == 'windowmaker':
 
             args = 'wmsetbg -s -u %s' % image
-            subprocess.Popen(args,shell=True)
+            subprocess.Popen(args, shell=True)
 
         elif desktop_env == 'enlightenment':
 
            args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
-           subprocess.Popen(args,shell=True)
+           subprocess.Popen(args, shell=True)
 
         elif desktop_env == 'windows':
 
