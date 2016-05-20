@@ -133,7 +133,7 @@ def set_wallpaper(image):
             args = ['gconftool-2','-t','string','--set','/desktop/gnome/background/picture_filename', '%s' % image]
             subprocess.Popen(args)
 
-        elif desktop_env == 'kde': pass
+        elif desktop_env == 'kde':
 
             # The KDE 4+ method of changing *anything* in the CLI is either
             # non-existent or deprecated or horribly convoluted.
