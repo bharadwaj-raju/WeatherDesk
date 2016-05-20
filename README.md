@@ -113,6 +113,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - Blackbox
   - Windowmaker
   - Enlightenment
+  - Awesome WM
 
 - Windows
 
