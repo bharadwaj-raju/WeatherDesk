@@ -39,7 +39,7 @@ def get_desktop_environment():
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
                                    'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon',
-                                   'i3', 'lxqt']:
+                                   'i3', 'lxqt', 'awesome']:
 
                 return desktop_session
 
@@ -277,6 +277,11 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
 
            args = 'enlightenment_remote -desktop-bg-add 0 0 0 0 %s' % image
            subprocess.Popen(args, shell=True)
+
+        elif desktop_env == 'awesome':
+            with subprocess.Popen("awesome-client", stdin=subprocess.PIPE) as awesome_client:
+                command = 'local gears = require("gears"); for s = 1, screen.count() do gears.wallpaper.maximized("%s", s, true); end;' % image
+                awesome_client.communicate(input=bytes(command, 'UTF-8'));
 
         elif desktop_env == 'windows':
 
