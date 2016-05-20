@@ -207,25 +207,25 @@ def get_time_of_day(level=3):
 
 def get_file_name(weather_name, time=False):
 
-    if 'drizzle' or 'rain' or 'showers' in weather_name: 
+    if 'drizzle' or 'rain' or 'showers' in weather_name:
         weather_file = 'rain' + file_format
 
-    elif 'thunder' in weather_name: 
+    elif 'thunder' in weather_name:
         weather_file = 'thunder' + file_format
 
-    elif 'snow' in weather_name: 
+    elif 'snow' in weather_name:
         weather_file = 'snow' + file_format
 
-    elif 'windy' or 'breeze' or 'gale' in weather_name: 
+    elif 'windy' or 'breeze' or 'gale' in weather_name:
         weather_file = 'wind' + file_format
 
-    elif 'calm' or 'clear' or 'fair' in weather_name: 
+    elif 'calm' or 'clear' or 'fair' in weather_name:
         weather_file = 'normal' + file_format
 
-    elif 'cloud' in weather_name: 
+    elif 'cloud' in weather_name:
         weather_file = 'cloudy' + file_format
 
-    else: 
+    else:
         weather_file = 'normal' + file_format
 
     if time:
@@ -243,11 +243,11 @@ def check_if_all_files_exist(time=False, level=3):
 
     if time:
 
-        if args.time == 3:
+        if level == 3:
 
             daytime = ['day', 'evening', 'night']
 
-        elif args.time == 4:
+        elif level == 4:
 
             daytime = ['morning', 'day', 'evening', 'night']
 
