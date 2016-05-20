@@ -279,7 +279,9 @@ xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-imag
            subprocess.Popen(args, shell=True)
 
         elif desktop_env == 'awesome':
+
             with subprocess.Popen("awesome-client", stdin=subprocess.PIPE) as awesome_client:
+
                 command = 'local gears = require("gears"); for s = 1, screen.count() do gears.wallpaper.maximized("%s", s, true); end;' % image
                 awesome_client.communicate(input=bytes(command, 'UTF-8'));
 
