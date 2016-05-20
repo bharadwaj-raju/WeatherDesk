@@ -207,7 +207,7 @@ def get_time_of_day(level=3):
 
 def get_file_name(weather_name, time=False):
 
-    if 'drizzle' or 'rain' or 'showers' in weather_name:
+    if 'drizzle' or 'rain' or 'shower' in weather_name:
         weather_file = 'rain' + file_format
 
     elif 'thunder' in weather_name:
