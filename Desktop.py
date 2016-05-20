@@ -4,6 +4,8 @@ import os
 import sys
 import subprocess
 import re
+import tempfile
+import shutil
 
 # Library to set wallpaper and find desktop - Cross-platform
 
@@ -153,6 +155,30 @@ def set_wallpaper(image):
             # peridically updating slideshow in a folder.
 
             # Update: Even *that* does not work. Sorry, KDE.
+
+            # Update: Periodically updating slideshows with random filenames?
+
+            old_working_dir = os.getcwd()
+
+            if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde')):
+
+                os.mkdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde'))
+
+            os.chdir(os.path.join(os.path.expanduser('~'), '.wall_slide_kde'))
+
+            for dirpath, dirnames, files in os.walk('.'):
+
+                if files:
+
+                    for file in os.listdir('.'):
+
+                        os.remove(file)
+
+            kde_random_image = tempfile.NamedTemporaryFile(delete=False)
+
+            shutil.copyfile(image, kde_random_image.name)
+
+            os.chdir(old_working_dir)
 
         elif desktop_env in ['kde3', 'trinity']:
 
