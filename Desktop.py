@@ -23,11 +23,7 @@ def get_desktop_environment():
 
     else:
 
-        desktop_session = os.environ.get('XDG_CURRENT_DESKTOP')
-
-        if desktop_session is None:
-
-            desktop_session = os.environ.get('DESKTOP_SESSION')
+        desktop_session = os.environ.get('XDG_CURRENT_DESKTOP') or os.environ.get('DESKTOP_SESSION')
 
         if desktop_session is not None:
 
