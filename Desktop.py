@@ -3,9 +3,7 @@
 import os
 import sys
 import subprocess
-import shutil
 import re
-import textwrap
 
 # Library to set wallpaper and find desktop - Cross-platform
 
