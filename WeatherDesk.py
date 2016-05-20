@@ -207,7 +207,14 @@ def get_time_of_day(level=3):
 
 def get_file_name(weather_name, time=False):
 
-    if 'drizzle' or 'rain' or 'shower' in weather_name:
+    # For some weird reason, Python evaluates the following as True:
+    # 'some' or 'the other' or 'nope' in 'string_which_doesnt_have_these'
+
+    rain_strs = ('drizzle', 'rain', 'shower')
+    wind_strs = ('wind', 'breez', 'gale')  # breez matches both breeze and breezy
+    normal_strs = ('calm', 'clear', 'fair', 'sun')
+
+    if any(substr in weather_name for substr in rain_strs):
         weather_file = 'rain' + file_format
 
     elif 'thunder' in weather_name:
@@ -216,10 +223,10 @@ def get_file_name(weather_name, time=False):
     elif 'snow' in weather_name:
         weather_file = 'snow' + file_format
 
-    elif 'windy' or 'breeze' or 'gale' in weather_name:
+    elif any(substr in weather_name for substr in wind_strs):
         weather_file = 'wind' + file_format
 
-    elif 'calm' or 'clear' or 'fair' in weather_name:
+    elif any(substr in weather_name for substr in normal_strs):
         weather_file = 'normal' + file_format
 
     elif 'cloud' in weather_name:
@@ -279,6 +286,9 @@ while True:
         weather_json = json.loads(urllib.request.urlopen(weather_json_url).read().decode('utf-8'))
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
+
+        print(weather)
+        print(city)
 
         if not check_if_all_files_exist(time=use_time, level=args.time):
 
