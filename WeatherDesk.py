@@ -192,7 +192,7 @@ def get_file_name(weather_name, time=False):
                  'snow': 'snow',
                  'cloudy': 'cloud'}
      def get_weather_summary():
-         for summary, words in summaries:
+         for summary, words in summaries.items():
              for word in words.split():
                  if word in weather_name:
                      return summary
