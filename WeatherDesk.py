@@ -79,40 +79,94 @@ arg_parser.add_argument('-c', '--city', metavar='name', type=str,
 args = arg_parser.parse_args()
 
 if args.city:
+
     city = ' '.join(args.city).replace(' ', '%20')
+
 else:
+
     try:
+
         city = json.loads(urllib.request.urlopen('http://ipinfo.io/json').read().decode('utf-8'))
         city = city['city'].replace(' ', '%20')
-    except:
-        pass
 
+    except:
+
+        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+
+        sys.exit(1)
+
+    if city is None or city == '':
+
+        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+
+        sys.exit(1)
+
+# Check if city is valid
+
+try:
+
+    city_checked = True
+
+    city_check_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20%2A%20from%20geo.places(5)%20where%20text%3D"' + city + r'"&format=json'
+
+    city_check_json = json.loads(urllib.request.urlopen(city_check_json_url).read().decode('utf-8'))
+
+    if city_check_json['query']['results'] is None or city_check_json['query']['results'] == 'null':
+
+        city_is_invalid = True
+
+    else:
+
+        city_is_invalid = False
+
+except:
+
+    pass
+
+if city_checked:
+
+    if city_is_invalid:
+
+        sys.stderr.write('Invalid city! Please check the name.')
+
+        sys.exit(1)
 
 use_time = bool(args.time)
 
 if args.dir:
+
     # User provided a directory
     walls_dir = os.path.abspath(args.dir)
+
     if not os.path.isdir(walls_dir):
+
         sys.stderr.write('Invalid directory %s.' % walls_dir)
         sys.exit(1)
 else:
+
     walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
+
     if not os.path.isdir(walls_dir):
+
         os.mkdir(walls_dir)
         fmt = 'No directory specified. Creating in {}... Put files there or specify directory with --dir'
         sys.stderr.write(fmt.format(walls_dir))
         sys.exit(1)
 
 if args.format:
+
     if not args.format.startswith('.'):
+
         args.format = '.' + args.format
+
     file_format = args.format
+
 else: file_format = '.jpg'
 
 wait_time = args.wait or 600  # ten minutes
 
 if args.naming:
+
     print(NAMING_RULES.format(file_format))
     sys.exit(0)
 
@@ -267,9 +321,11 @@ while True:
         weather_json = json.loads(urllib.request.urlopen(weather_json_url).read().decode('utf-8'))
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
-        city=str(weather_json['query']['results']['channel']['location']['city'])+str(weather_json['query']['results']['channel']['location']['region'])
+
+        city_with_area=str(weather_json['query']['results']['channel']['location']['city'])+str(weather_json['query']['results']['channel']['location']['region'])
+
         print(weather)
-        print(city)
+        print(city_with_area)
 
         print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
