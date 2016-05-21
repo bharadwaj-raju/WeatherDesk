@@ -273,7 +273,7 @@ while True:
         weather_json = json.loads(urllib.request.urlopen(weather_json_url).read().decode('utf-8'))
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
-
+        city=str(weather_json['query']['results']['channel']['location']['city'])+str(weather_json['query']['results']['channel']['location']['region'])
         print(weather)
         print(city)
 
