@@ -104,7 +104,6 @@ else:
         sys.stderr.write(fmt.format(walls_dir))
         sys.exit(1)
 
-
 if args.format:
     if not args.format.startswith('.'):
         args.format = '.' + args.format
@@ -187,37 +186,21 @@ def get_time_of_day(level=3):
             return 'night'
 
 def get_file_name(weather_name, time=False):
+    summaries = {'rain': 'drizzle rain shower',
+                 'wind': 'breez gale wind',  # breez matches both breeze and breezy
+                 'thunder': 'thunder',
+                 'snow': 'snow',
+                 'cloudy': 'cloud'}
+     def get_weather_summary():
+         for summary, words in summaries.items():
+             for word in words.split():
+                 if word in weather_name:
+                     return summary
+         return 'normal'
 
-    # For some weird reason, Python evaluates the following as True:
-    # 'some' or 'the other' or 'nope' in 'string_which_doesnt_have_these'
-
-    rain_strs = ('drizzle', 'rain', 'shower')
-    wind_strs = ('wind', 'breez', 'gale')  # breez matches both breeze and breezy
-    normal_strs = ('calm', 'clear', 'fair', 'sun')
-
-    if any(substr in weather_name for substr in rain_strs):
-        weather_file = 'rain' + file_format
-
-    elif 'thunder' in weather_name:
-        weather_file = 'thunder' + file_format
-
-    elif 'snow' in weather_name:
-        weather_file = 'snow' + file_format
-
-    elif any(substr in weather_name for substr in wind_strs):
-        weather_file = 'wind' + file_format
-
-    elif any(substr in weather_name for substr in normal_strs):
-        weather_file = 'normal' + file_format
-
-    elif 'cloud' in weather_name:
-        weather_file = 'cloudy' + file_format
-
-    else:
-        weather_file = 'normal' + file_format
+    weather_file = get_weather_summary() + file_format
 
     if time:
-
         return get_time_of_day(args.time) + '-' + weather_file
 
     return weather_file
@@ -248,13 +231,10 @@ def check_if_all_files_exist(time=False, level=3):
             for weather in required_files]
 
     for i in required_files:
-
-        if not os.path.isfile(os.path.join(walls_dir, (i + file_format))):
-
+        file_path = os.path.join(walls_dir, (i + file_format))
+        if not os.path.isfile(file_path):
             all_exist = False
-
-            sys.stderr.write(os.path.join(walls_dir, (i + file_format)) + '\n')
-
+            sys.stderr.write(file_path + '\n')
     return all_exist
 
 
@@ -276,7 +256,6 @@ while True:
 
         print(weather)
         print(city)
-
 
         print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
