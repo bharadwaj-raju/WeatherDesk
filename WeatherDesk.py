@@ -186,21 +186,29 @@ def get_time_of_day(level=3):
             return 'night'
 
 def get_file_name(weather_name, time=False):
+
     summaries = {'rain': 'drizzle rain shower',
                  'wind': 'breez gale wind',  # breez matches both breeze and breezy
                  'thunder': 'thunder',
                  'snow': 'snow',
                  'cloudy': 'cloud'}
+
     def get_weather_summary():
+
         for summary, words in summaries.items():
+
             for word in words.split():
+
                 if word in weather_name:
+
                     return summary
+
         return 'normal'
 
     weather_file = get_weather_summary() + file_format
 
     if time:
+
         return get_time_of_day(args.time) + '-' + weather_file
 
     return weather_file
