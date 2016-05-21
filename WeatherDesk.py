@@ -227,14 +227,20 @@ def check_if_all_files_exist(time=False, level=3):
             daytime = ['day', 'night']
 
         required_files = [moment + '-' + weather
+
             for moment in daytime
             for weather in required_files]
 
     for i in required_files:
+
         file_path = os.path.join(walls_dir, (i + file_format))
+
         if not os.path.isfile(file_path):
+
             all_exist = False
+
             sys.stderr.write(file_path + '\n')
+
     return all_exist
 
 
