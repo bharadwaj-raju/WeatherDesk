@@ -78,65 +78,46 @@ arg_parser.add_argument('-c', '--city', metavar='name', type=str,
 
 args = arg_parser.parse_args()
 
-if args.city is not None:
-
+if args.city:
     city = ' '.join(args.city).replace(' ', '%20')
-
 else:
-
     try:
-
         city = json.loads(urllib.request.urlopen('http://ipinfo.io/json').read().decode('utf-8'))
-
         city = city['city'].replace(' ', '%20')
-
     except:
-
         pass
 
-if args.time is not None: use_time = True
-else: use_time = False
 
-if args.dir is not None:
+use_time = bool(args.time)
 
+if args.dir:
     # User provided a directory
-
     walls_dir = os.path.abspath(args.dir)
-
     if not os.path.isdir(walls_dir):
-
         sys.stderr.write('Invalid directory %s.' % walls_dir)
-
         sys.exit(1)
-
 else:
-
-    if not os.path.isdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')):
-
-        os.mkdir(os.path.join(os.path.expanduser('~'), '.weatherdesk_walls'))
-
-        sys.stderr.write('No directory specified. Creating in ' +
-        os.path.expanduser('~/.weatherdesk_walls') + '... Put files there or specify directory with --dir')
-
+    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
+    if not os.path.isdir(walls_dir):
+        os.mkdir(walls_dir)
+        fmt = 'No directory specified. Creating in {}... Put files there or specify directory with --dir'
+        sys.stderr.write(fmt.format(walls_dir))
         sys.exit(1)
 
-    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
 
-if args.format is not None:
-
-    if not args.format.startswith('.'): args.format = ''.join(('.', args.format))
-
+if args.format:
+    if not args.format.startswith('.'):
+        args.format = '.' + args.format
     file_format = args.format
-
 else: file_format = '.jpg'
 
-if args.wait is not None: wait_time = args.wait
+wait_time = args.wait or 600  # ten minutes
 
-else: wait_time = 600  # ten minutes
+if args.naming:
+    print(NAMING_RULES.format(file_format))
+    sys.exit(0)
 
-if args.naming: print(NAMING_RULES.format(file_format)); sys.exit(0)
-
-#-- -- Arguments
+#-- -- Functions
 
 def get_time_of_day(level=3):
 
