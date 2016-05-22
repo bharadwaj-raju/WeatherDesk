@@ -5,6 +5,7 @@
 # Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
 
 import urllib.request
+import urllib.error
 import os
 import time
 import datetime
@@ -12,6 +13,7 @@ import json
 import sys
 import argparse
 import Desktop
+import traceback
 
 __author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
 
@@ -89,7 +91,13 @@ else:
         city = json.loads(urllib.request.urlopen('http://ipinfo.io/json').read().decode('utf-8'))
         city = city['city'].replace(' ', '%20')
 
-    except:
+    except urllib.error.URLError:
+
+        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+
+        sys.exit(1)
+
+    except ValueError:
 
         sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
 
@@ -105,8 +113,6 @@ else:
 
 try:
 
-    city_checked = True
-
     city_check_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20%2A%20from%20geo.places(5)%20where%20text%3D"' + city + r'"&format=json'
 
     city_check_json = json.loads(urllib.request.urlopen(city_check_json_url).read().decode('utf-8'))
@@ -119,9 +125,23 @@ try:
 
         city_is_invalid = False
 
+    city_checked = True
+
 except:
 
-    pass
+    trace_city_check = '[City checking]\n' + traceback.format_exc()
+
+    city_checked = True
+
+    city_is_invalid = True  # exit, but after printing stack trace
+
+else:
+
+    trace_city_check = '[City checking] No error.'
+
+finally:
+
+    print(trace_city_check)
 
 if city_checked:
 
@@ -331,8 +351,24 @@ while True:
 
         Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
-    except:
+    except urllib.error.URLError:
 
-        pass
+        # Don't shut off on temporary network problems
+
+        trace_main_loop = '[Main loop]\n' + traceback.format_exc()
+
+    except ValueError:
+
+        # Sometimes JSON returns a null value for no reason
+
+        trace_main_loop = '[Main loop]\n' + traceback.format_exc()
+
+    else:
+
+        trace_main_loop = '[Main loop] No error.'
+
+    finally:
+
+        print(trace_main_loop)
 
     time.sleep(wait_time)
