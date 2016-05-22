@@ -135,7 +135,6 @@ try:
 
     city_check_json = json.loads(city_check_json)
 
-<<<<<<< HEAD
     if city_check_json['query']['results'] in (None, 'null'):
 
         city_is_invalid = True
@@ -143,9 +142,8 @@ try:
     else:
 
         city_is_invalid = False
-=======
+
     city_is_invalid = city_check_json['query']['results'] in (None, 'null')
->>>>>>> 4355fd47bd2fe3d7475f295d852b8010a4cc308a
 
     city_checked = True
 
