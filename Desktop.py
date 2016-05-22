@@ -19,9 +19,13 @@ import shutil
 
 def get_desktop_environment():
 
-    if sys.platform in ['win32', 'cygwin']: return 'windows'
+    if sys.platform in ['win32', 'cygwin']:
 
-    elif sys.platform == 'darwin': return 'mac'
+        return 'windows'
+
+    elif sys.platform == 'darwin':
+
+        return 'mac'
 
     else:
 
@@ -37,8 +41,10 @@ def get_desktop_environment():
 
                 desktop_session = desktop_session.replace('x-', '')
 
-            if desktop_session in ['gnome','unity', 'cinnamon', 'mate', 'xfce4', 'lxde', 'fluxbox',
-                                   'blackbox', 'openbox', 'icewm', 'jwm', 'afterstep','trinity', 'kde', 'pantheon',
+            if desktop_session in ['gnome','unity', 'cinnamon', 'mate',
+                                    'xfce4', 'lxde', 'fluxbox',
+                                   'blackbox', 'openbox', 'icewm', 'jwm', 
+                                   'afterstep','trinity', 'kde', 'pantheon',
                                    'i3', 'lxqt', 'awesome']:
 
                 return desktop_session
