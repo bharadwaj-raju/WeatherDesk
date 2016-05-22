@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com> All Rights Reserved.
+# Copyright (c) 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+# All Rights Reserved.
 
-# Licensed under the GNU General Public License 3: https://www.gnu.org/licenses/gpl.txt
+# Licensed under the GNU General Public License 3:
+# https://www.gnu.org/licenses/gpl.txt
 
-import urllib.request
+from urllib.request import urlopen
 import urllib.error
 import os
 import time
@@ -42,25 +44,30 @@ _________________________|________________
 '''
 
 
-#-- Arguments
+# Arguments
 
 arg_parser = argparse.ArgumentParser(
     description='''WeatherDesk - Change the wallpaper based on the weather
-    (Uses the Yahoo! Weather API)''', formatter_class=argparse.RawTextHelpFormatter)
+    (Uses the Yahoo! Weather API)''',
+    formatter_class=argparse.RawTextHelpFormatter)
 
-arg_parser.add_argument('-d', '--dir', metavar='directory', type=str,
+arg_parser.add_argument(
+    '-d', '--dir', metavar='directory', type=str,
     help='Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls',
     required=False)
 
-arg_parser.add_argument('-f', '--format', metavar='format', type=str,
+arg_parser.add_argument(
+    '-f', '--format', metavar='format', type=str,
     help='Specify image file format. Default: %s' % '.jpg',
     required=False)
 
-arg_parser.add_argument('-w', '--wait', metavar='seconds', type=int,
-    help='Specify time (in seconds) to wait before updating. Default: %d' % 600,
+arg_parser.add_argument(
+    '-w', '--wait', metavar='seconds', type=int,
+    help='Specify time (in seconds) to wait before updating. Default: 600',
     required=False)
 
-arg_parser.add_argument('-t', '--time', nargs='?',
+arg_parser.add_argument(
+    '-t', '--time', nargs='?',
     help='''Use different backgrounds for different times.\n
 Variations:
   2 = day/night
@@ -70,13 +77,15 @@ Variations:
 See --naming.''',
     type=int, choices=[2, 3, 4], const=3, required=False)
 
-arg_parser.add_argument('-n', '--naming', action='store_true',
+arg_parser.add_argument(
+    '-n', '--naming', action='store_true',
     help='Show the image file-naming rules and exit.',
     required=False)
 
-arg_parser.add_argument('-c', '--city', metavar='name', type=str,
-    help=str('Specify city for weather. If not given, taken from ipinfo.io.'), nargs='+',
-    required=False)
+arg_parser.add_argument(
+    '-c', '--city', metavar='name', type=str,
+    help=str('Specify city for weather. If not given, taken from ipinfo.io.'),
+    nargs='+', required=False)
 
 args = arg_parser.parse_args()
 
@@ -88,24 +97,31 @@ else:
 
     try:
 
-        city = json.loads(urllib.request.urlopen('http://ipinfo.io/json').read().decode('utf-8'))
+        city_json_url = 'http://ipinfo.io/json'
+
+        city_json = urlopen(city_json_url).read().decode('utf-8')
+
+        city = json.loads(city_json)
         city = city['city'].replace(' ', '%20')
 
     except urllib.error.URLError:
 
-        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+        sys.stderr.write(
+            'Finding city from IP failed! Specify city manually with --city.')
 
         sys.exit(1)
 
     except ValueError:
 
-        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+        sys.stderr.write(
+            'Finding city from IP failed! Specify city manually with --city.')
 
         sys.exit(1)
 
     if city is None or city == '':
 
-        sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
+        sys.stderr.write(
+            'Finding city from IP failed! Specify city manually with --city.')
 
         sys.exit(1)
 
@@ -115,9 +131,11 @@ try:
 
     city_check_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20%2A%20from%20geo.places(5)%20where%20text%3D"' + city + r'"&format=json'
 
-    city_check_json = json.loads(urllib.request.urlopen(city_check_json_url).read().decode('utf-8'))
+    city_check_json = urlopen(city_check_json_url).read().decode('utf-8')
 
-    if city_check_json['query']['results'] is None or city_check_json['query']['results'] == 'null':
+    city_check_json = json.loads(city_check_json)
+
+    if city_check_json['query']['results'] in (None, 'null'):
 
         city_is_invalid = True
 
@@ -169,7 +187,8 @@ else:
     if not os.path.isdir(walls_dir):
 
         os.mkdir(walls_dir)
-        fmt = 'No directory specified. Creating in {}... Put files there or specify directory with --dir'
+        fmt = '''No directory specified.
+Creating in {}... Put files there or specify directory with --dir'''
         sys.stderr.write(fmt.format(walls_dir))
         sys.exit(1)
 
@@ -181,7 +200,9 @@ if args.format:
 
     file_format = args.format
 
-else: file_format = '.jpg'
+else:
+
+    file_format = '.jpg'
 
 wait_time = args.wait or 600  # ten minutes
 
@@ -190,7 +211,7 @@ if args.naming:
     print(NAMING_RULES.format(file_format))
     sys.exit(0)
 
-#-- -- Functions
+# Functions
 
 def get_time_of_day(level=3):
 
@@ -308,7 +329,8 @@ def check_if_all_files_exist(time=False, level=3):
 
             daytime = ['day', 'night']
 
-        required_files = [moment + '-' + weather
+        required_files = [
+            moment + '-' + weather
 
             for moment in daytime
             for weather in required_files]
@@ -328,9 +350,13 @@ def check_if_all_files_exist(time=False, level=3):
 
 if not check_if_all_files_exist(time=use_time, level=args.time):
 
-    sys.stderr.write('\nNot all required files were found.\n %s' % NAMING_RULES.format(file_format))
+    sys.stderr.write(
+        '\nNot all required files were found.\n %s' % NAMING_RULES.format(
+            file_format))
 
     sys.exit(1)
+
+# Main loop
 
 while True:
 
@@ -338,18 +364,19 @@ while True:
 
         weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
-        weather_json = json.loads(urllib.request.urlopen(weather_json_url).read().decode('utf-8'))
+        weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
 
         weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
 
-        city_with_area=str(weather_json['query']['results']['channel']['location']['city'])+str(weather_json['query']['results']['channel']['location']['region'])
+        city_with_area=str(weather_json['query']['results']['channel']['location']['city']) + str(weather_json['query']['results']['channel']['location']['region'])
 
         print(weather)
         print(city_with_area)
 
         print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
-        Desktop.set_wallpaper(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+        Desktop.set_wallpaper(
+            os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
     except urllib.error.URLError:
 
