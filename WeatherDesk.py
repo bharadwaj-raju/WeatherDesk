@@ -103,7 +103,7 @@ else:
 
         sys.exit(1)
 
-    if city is None or city == '':
+    if not city:
 
         sys.stderr.write('Finding city from IP failed! Specify city manually with --city.')
 
@@ -117,13 +117,7 @@ try:
 
     city_check_json = json.loads(urllib.request.urlopen(city_check_json_url).read().decode('utf-8'))
 
-    if city_check_json['query']['results'] is None or city_check_json['query']['results'] == 'null':
-
-        city_is_invalid = True
-
-    else:
-
-        city_is_invalid = False
+    city_is_invalid = city_check_json['query']['results'] in (None, 'null')
 
     city_checked = True
 
@@ -143,13 +137,11 @@ finally:
 
     print(trace_city_check)
 
-if city_checked:
+if city_checked and city_is_invalid:
 
-    if city_is_invalid:
+    sys.stderr.write('Invalid city! Please check the name.')
 
-        sys.stderr.write('Invalid city! Please check the name.')
-
-        sys.exit(1)
+    sys.exit(1)
 
 use_time = bool(args.time)
 
