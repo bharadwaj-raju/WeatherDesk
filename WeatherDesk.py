@@ -390,6 +390,13 @@ while True:
 
         trace_main_loop = '[Main loop]\n' + traceback.format_exc()
 
+    except:
+
+        # All other errors
+        # We'll still have a full stack trace
+
+        trace_main_loop = '[Main loop]\n' + traceback.format_exc()
+
     else:
 
         trace_main_loop = '[Main loop] No error.'

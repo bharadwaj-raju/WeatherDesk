@@ -43,7 +43,7 @@ def get_desktop_environment():
 
             if desktop_session in ['gnome','unity', 'cinnamon', 'mate',
                                     'xfce4', 'lxde', 'fluxbox',
-                                   'blackbox', 'openbox', 'icewm', 'jwm', 
+                                   'blackbox', 'openbox', 'icewm', 'jwm',
                                    'afterstep','trinity', 'kde', 'pantheon',
                                    'i3', 'lxqt', 'awesome']:
 
@@ -91,13 +91,17 @@ def is_running(process):
 
         s = subprocess.Popen(['tasklist', '/v'],stdout=subprocess.PIPE)
 
-    for x in s.stdout:
+    process_list, err = s.communicate()
 
-        if re.search(process, x):
+    process_list = str(process_list)
 
-            return True
+    if process in process_list:
 
-    return False
+        return True
+
+    else:
+
+        return False
 
 def set_wallpaper(image):
 
