@@ -384,6 +384,25 @@ while True:
 
         trace_main_loop = '[Main loop]\n' + traceback.format_exc()
 
+
+        if sys.platform.startswith('linux'):
+
+            # HACK: glibc on Linux only loads /etc/resolv.conf once
+            # This breaks our network communications after suspend/resume
+            # So we force it to reload using the res_init() function
+
+            try:
+
+                import ctypes
+                libc = ctypes.cdll.LoadLibrary('libc.so.6')
+                res_init = libc.__res_init
+
+            except:
+
+                res_init = lambda:None
+
+            res_init()  # Reload resolv.conf
+
     except ValueError:
 
         # Sometimes JSON returns a null value for no reason
