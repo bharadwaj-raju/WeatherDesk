@@ -399,6 +399,9 @@ while True:
 
             except:
 
+                print('[Main loop] Failed to load libc through ctypes. \n'
+                    + traceback.format_exc())
+
                 res_init = lambda:None
 
             res_init()  # Reload resolv.conf
