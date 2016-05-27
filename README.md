@@ -93,7 +93,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
 - Linux
 
   - AfterStep
-  - Awesome
+  - Awesome WM
   - Blackbox
   - Cinnamon
   - Enlightenment
@@ -112,7 +112,6 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - Razor-Qt
   - Trinity
   - Unity
-  - WM
   - Windowmaker
   - XFCE
 
