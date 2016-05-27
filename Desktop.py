@@ -93,15 +93,8 @@ def is_running(process):
 
     process_list, err = s.communicate()
 
-    process_list = str(process_list)
+    return process in str(process_list)
 
-    if process in process_list:
-
-        return True
-
-    else:
-
-        return False
 
 def set_wallpaper(image):
 
