@@ -92,28 +92,29 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
 
 - Linux
 
-  - Gnome 3
-  - Pantheon
-  - Unity
-  - Gnome 2
-  - Mate
-  - Cinnamon
-  - Openbox
-  - LXDE
-  - XFCE
-  - LXQt
-  - i3
-  - KDE **3**
-  - Trinity
-  - Fluxbox
-  - Razor-Qt
-  - JWM
   - AfterStep
-  - IceWM
+  - Awesome
   - Blackbox
-  - Windowmaker
+  - Cinnamon
   - Enlightenment
-  - Awesome WM
+  - Fluxbox
+  - Gnome 2
+  - Gnome 3
+  - i3
+  - IceWM
+  - JWM
+  - KDE **3**
+  - LXDE
+  - LXQt
+  - Mate
+  - Openbox
+  - Pantheon
+  - Razor-Qt
+  - Trinity
+  - Unity
+  - WM
+  - Windowmaker
+  - XFCE
 
 - Windows
 
