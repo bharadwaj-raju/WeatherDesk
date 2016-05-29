@@ -6,6 +6,7 @@ import subprocess
 import re
 import tempfile
 import shutil
+import configparser
 
 # Library to set wallpaper and find desktop - Cross-platform
 
