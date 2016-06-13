@@ -402,6 +402,9 @@ while True:
             # This breaks our network communications after suspend/resume
             # So we force it to reload using the res_init() function
 
+            # See bug 984 (https://sourceware.org/bugzilla/show_bug.cgi?id=984)
+            # in the glibc bugtracker
+
             try:
 
                 import ctypes
