@@ -32,6 +32,7 @@ import re
 import tempfile
 import shutil
 import configparser
+import traceback  # NOTE: BUG: TODO: HACK: REMOVE LATER
 
 # Library to set wallpaper and find desktop - Cross-platform
 
@@ -211,22 +212,22 @@ def set_wallpaper(image):
             # XFCE 4.12 to just monitor0 instead of monitorVGA1 or something
             # So now we need to do both.
 
-            XFCE_SCRIPT = str('''
-monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''
-xfdesktop --reload
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s ''' + image + '''
-xfdesktop --reload''')
+            list_of_properties_cmd = subprocess.Popen(['bash -c "xfconf-query -R -l -c xfce4-desktop -p /backdrop"'], shell=True, stdout=subprocess.PIPE)
 
-            xfce_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
+            list_of_properties, list_of_properties_err = list_of_properties_cmd.communicate()
 
-            xfce_script_file.truncate()
+            list_of_properties = list_of_properties.decode('utf-8')
 
-            xfce_script_file.write(XFCE_SCRIPT)
+            for i in list_of_properties.split('\n'):
 
-            xfce_script_file.close()
+                if i.endswith('last-image'):
 
-            subprocess.Popen(['sh', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.sh'))])
+                    # The property given is a background property
+                    subprocess.Popen(
+                        ['xfconf-query -c xfce4-desktop -p %s -s "%s"' % (i, image)],
+                        shell=True)
+
+                    subprocess.Popen(['xfdesktop --reload'], shell=True)
 
         elif desktop_env=='razor-qt':
 
@@ -357,7 +358,7 @@ end tell
 
     except:
 
-        sys.stderr.write('Error: Failed to set wallpaper.')
+        print(traceback.format_exc())
 
         return False
 
