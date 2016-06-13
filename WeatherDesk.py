@@ -1,10 +1,24 @@
 #!/usr/bin/env python3
+# coding: utf-8
 
-# Copyright (c) 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+# Copyright © 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com>
 # All Rights Reserved.
 
-# Licensed under the GNU General Public License 3:
-# https://www.gnu.org/licenses/gpl.txt
+# This file is part of WeatherDesk.
+#
+# WeatherDesk is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WeatherDesk is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WeatherDesk (in the LICENSE file).
+# If not, see <http://www.gnu.org/licenses/>.
 
 from urllib.request import urlopen
 import urllib.error
@@ -16,9 +30,6 @@ import sys
 import argparse
 import Desktop
 import traceback
-
-__author__ = 'Bharadwaj Raju <bharadwaj.raju777@gmail.com>'
-
 
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
@@ -397,14 +408,12 @@ while True:
                 libc = ctypes.cdll.LoadLibrary('libc.so.6')
                 res_init = libc.__res_init
 
+                res_init()  # Reload resolv.conf
+
             except:
 
                 print('[Main loop] Failed to load libc through ctypes. \n'
                     + traceback.format_exc())
-
-                res_init = lambda:None
-
-            res_init()  # Reload resolv.conf
 
     except ValueError:
 

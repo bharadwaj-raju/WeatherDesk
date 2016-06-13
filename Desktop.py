@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+# coding: utf-8
+
+# Copyright © 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+# All Rights Reserved.
+
+# Original code taken from the following answers by StackOverflow user
+# Martin Hansen (http://stackoverflow.com/users/2118300/martin-hansen):
+# - http://stackoverflow.com/a/21213358/5413945
+# - http://stackoverflow.com/a/21213504/5413945
+
+# This file is part of WeatherDesk.
+#
+# WeatherDesk is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WeatherDesk is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WeatherDesk (in the LICENSE file).
+# If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import sys
@@ -9,14 +34,6 @@ import shutil
 import configparser
 
 # Library to set wallpaper and find desktop - Cross-platform
-
-# set_wallpaper() and get_config_dir()
-# taken (and modified a bit) from http://stackoverflow.com/a/21213504/5413945
-# by stackoverflow user Martin Hansen
-
-# get_desktop_environment() and is_running()
-# taken (and modified a bit) from http://stackoverflow.com/a/21213358/5413945
-# by stackoverflow user Martin Hansen
 
 def get_desktop_environment():
 
@@ -194,10 +211,12 @@ def set_wallpaper(image):
             # XFCE 4.12 to just monitor0 instead of monitorVGA1 or something
             # So now we need to do both.
 
-            XFCE_SCRIPT = r'''
+            XFCE_SCRIPT = str('''
 monitor_port=$(xrandr | grep -e " connected [^(]" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s ''' + image + '''\nxfdesktop --reload'''
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor"$monitor_port"/workspace0/last-image -s ''' + image + '''
+xfdesktop --reload
+xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/workspace0/last-image -s ''' + image + '''
+xfdesktop --reload''')
 
             xfce_script_file = open(os.path.expanduser('~/.weatherdesk_script.sh'), 'w')
 
