@@ -31,6 +31,7 @@ import argparse
 import Desktop
 import traceback
 import psutil
+import subprocess as sp
 
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
@@ -372,20 +373,15 @@ def restart_program():
 
 	# Restarts the current program, with file objects and descriptors cleanup
 
-	try:
+	new_weatherdesk_cmd = ''
 
-		p = psutil.Process(os.getpid())
+	for i in sys.argv:
 
-		for handler in p.open_files() + p.connections():
+		new_weatherdesk_cmd = ' ' + i
 
-			os.close(handler.fd)
+	sp.Popen([new_weatherdesk_cmd], shell=True)
 
-	except Exception:
-
-		print('[Program Force-Restart] \n' + traceback.format_exc())
-
-	python = sys.executable
-	os.execl(python, python, *sys.argv)
+	sys.exit(0)
 
 # Main loop
 
