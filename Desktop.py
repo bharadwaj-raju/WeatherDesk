@@ -334,9 +334,14 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
             except ImportError:
 
-                OSX_SCRIPT = '''tell application "Finder"
-set desktop picture to POSIX file "%s"
-end tell
+                OSX_SCRIPT = '''tell application "System Events"
+                                  set desktopCount to count of desktops
+                                    repeat with desktopNumber from 1 to desktopCount
+                                      tell desktop desktopNumber
+                                        set picture to POSIX file "%s"
+                                      end tell
+                                    end repeat
+                                end tell
                 ''' % image
 
                 osx_script_file = open(os.path.expanduser('~/.weatherdesk_script.AppleScript'), 'w')
