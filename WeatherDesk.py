@@ -30,7 +30,6 @@ import sys
 import argparse
 import Desktop
 import traceback
-import psutil
 import subprocess as sp
 
 NAMING_RULES = '''
@@ -99,6 +98,11 @@ arg_parser.add_argument(
 	'-c', '--city', metavar='name', type=str,
 	help=str('Specify city for weather. If not given, taken from ipinfo.io.'),
 	nargs='+', required=False)
+
+arg_parser.add_argument(
+	'-o', '--one-time-run', action='store_true',
+	help='Run once, then exit.',
+	required=False)
 
 args = arg_parser.parse_args()
 
@@ -383,27 +387,36 @@ def restart_program():
 
 	sys.exit(0)
 
+def main():
+
+	weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+
+	weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
+
+	weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
+
+	city_with_area=str(weather_json['query']['results']['channel']['location']['city']) + str(weather_json['query']['results']['channel']['location']['region'])
+
+	print(weather)
+	print(city_with_area)
+
+	print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+
+	Desktop.set_wallpaper(
+		os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+
+
 # Main loop
+
+if args.one_time_run:
+	main()
+	sys.exit(0)
 
 while True:
 
 	try:
 
-		weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
-
-		weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
-
-		weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
-
-		city_with_area=str(weather_json['query']['results']['channel']['location']['city']) + str(weather_json['query']['results']['channel']['location']['region'])
-
-		print(weather)
-		print(city_with_area)
-
-		print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
-
-		Desktop.set_wallpaper(
-			os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+		main()
 
 	except urllib.error.URLError:
 
