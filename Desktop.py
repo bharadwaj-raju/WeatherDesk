@@ -200,7 +200,7 @@ def set_wallpaper(image):
 
 		list_of_properties = list_of_properties.decode('utf-8')
 
-		for i in list_of_properties.subprocesslit('\n'):
+		for i in list_of_properties.split('\n'):
 
 			if i.endswith('last-image'):
 
