@@ -298,13 +298,13 @@ def set_wallpaper(image):
 rundll32.exe user32.dll,UpdatePerUserSystemParameters
 ''' % image
 
-			win_script_file = open(os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
+			win_script_file = open(os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
 
 			win_script_file.write(WIN_SCRIPT)
 
 			win_script_file.close()
 
-			subprocess.Popen([os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
+			subprocess.Popen([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
 
 	elif desktop_env == 'mac':
 
@@ -338,7 +338,7 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
 			osx_script_file.close()
 
-			subprocess.Popen(['/usr/bin/osascript', os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.AppleScript'))])
+			subprocess.Popen(['/usr/bin/osascript', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.AppleScript'))])
 	else:
 
 		sys.stderr.write('Error: Failed to set wallpaper. (Desktop not supported)')
