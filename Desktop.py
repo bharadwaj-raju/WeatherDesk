@@ -72,10 +72,11 @@ def get_desktop_environment():
 
 			# Canonical sets $DESKTOP_SESSION to Lubuntu rather than LXDE if using LXDE.
 			# There is no guarantee that they will not do the same with the other desktop environments.
+			# In Ubuntu 17.04, $DESKTOP_SESSION is set to 'Unity:Unity7' instead of 'Unity' when using Unity
 
 			elif 'xfce' in desktop_session or desktop_session.startswith('xubuntu'): return 'xfce4'
 
-			elif desktop_session.startswith('ubuntu'): return 'unity'
+			elif desktop_session.startswith('ubuntu') or desktop_session.startswith('unity'): return 'unity'
 
 			elif desktop_session.startswith('lubuntu'): return 'lxde'
 
