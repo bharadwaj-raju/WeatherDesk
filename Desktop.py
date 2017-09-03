@@ -72,10 +72,11 @@ def get_desktop_environment():
 
 			# Canonical sets $DESKTOP_SESSION to Lubuntu rather than LXDE if using LXDE.
 			# There is no guarantee that they will not do the same with the other desktop environments.
+			# In Ubuntu 17.04, $DESKTOP_SESSION is set to 'Unity:Unity7' instead of 'Unity' when using Unity
 
 			elif 'xfce' in desktop_session or desktop_session.startswith('xubuntu'): return 'xfce4'
 
-			elif desktop_session.startswith('ubuntu'): return 'unity'
+			elif desktop_session.startswith('ubuntu') or desktop_session.startswith('unity'): return 'unity'
 
 			elif desktop_session.startswith('lubuntu'): return 'lxde'
 
@@ -202,7 +203,7 @@ def set_wallpaper(image):
 
 		list_of_properties = list_of_properties.decode('utf-8')
 
-		for i in list_of_properties.subprocesslit('\n'):
+		for i in list_of_properties.split('\n'):
 
 			if i.endswith('last-image'):
 
@@ -300,13 +301,13 @@ def set_wallpaper(image):
 rundll32.exe user32.dll,UpdatePerUserSystemParameters
 ''' % image
 
-			win_script_file = open(os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
+			win_script_file = open(os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
 
 			win_script_file.write(WIN_SCRIPT)
 
 			win_script_file.close()
 
-			subprocess.Popen([os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
+			subprocess.Popen([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
 
 	elif desktop_env == 'mac':
 
@@ -340,7 +341,7 @@ rundll32.exe user32.dll,UpdatePerUserSystemParameters
 
 			osx_script_file.close()
 
-			subprocess.Popen(['/usr/bin/osascript', os.path.absubprocessath(os.path.expanduser('~/.weatherdesk_script.AppleScript'))])
+			subprocess.Popen(['/usr/bin/osascript', os.path.abspath(os.path.expanduser('~/.weatherdesk_script.AppleScript'))])
 	else:
 
 		sys.stderr.write('Error: Failed to set wallpaper. (Desktop not supported)')
