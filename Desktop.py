@@ -159,15 +159,17 @@ def set_wallpaper(image):
 		kde_script = dedent(
 		'''\
 		var Desktops = desktops();
-		for (i=0;i<Desktops.length;i++) {{
+		for (i=0;i<Desktops.length;i++) {
 			d = Desktops[i];
 			d.wallpaperPlugin = "org.kde.image";
 			d.currentConfigGroup = Array("Wallpaper",
 										"org.kde.image",
 										"General");
-			d.writeConfig("Image", "file://{}")
-		}}
-		''').format(image)
+			d.writeConfig("Image", "file://%s")
+		}
+		''') % image
+
+		print(kde_script)
 
 		subprocess.Popen(
 				['dbus-send',

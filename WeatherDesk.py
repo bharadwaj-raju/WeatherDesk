@@ -142,50 +142,6 @@ else:
 
 		sys.exit(1)
 
-# Check if city is valid
-
-try:
-
-	city_check_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20%2A%20from%20geo.places(5)%20where%20text%3D"' + city + r'"&format=json'
-
-	city_check_json = urlopen(city_check_json_url).read().decode('utf-8')
-
-	city_check_json = json.loads(city_check_json)
-
-	if city_check_json['query']['results'] in (None, 'null'):
-
-		city_is_invalid = True
-
-	else:
-
-		city_is_invalid = False
-
-	city_is_invalid = city_check_json['query']['results'] in (None, 'null')
-
-	city_checked = True
-
-except:
-
-	trace_city_check = '[City checking]\n' + traceback.format_exc()
-
-	city_checked = True
-
-	city_is_invalid = True  # exit, but after printing stack trace
-
-else:
-
-	trace_city_check = '[City checking] No error.'
-
-finally:
-
-	print(trace_city_check)
-
-if city_checked and city_is_invalid:
-
-	sys.stderr.write('Invalid city! Please check the name.')
-
-	sys.exit(1)
-
 use_time = bool(args.time)
 
 if args.dir:
