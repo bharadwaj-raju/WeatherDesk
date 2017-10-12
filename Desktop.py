@@ -295,19 +295,9 @@ def set_wallpaper(image):
 			awesome_client.communicate(input=bytes(command, 'UTF-8'));
 
 	elif desktop_env == 'windows':
-
-			WIN_SCRIPT = '''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f
-
-rundll32.exe user32.dll,UpdatePerUserSystemParameters
-''' % image
-
-			win_script_file = open(os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat')), 'w')
-
-			win_script_file.write(WIN_SCRIPT)
-
-			win_script_file.close()
-
-			subprocess.Popen([os.path.abspath(os.path.expanduser('~/.weatherdesk_script.bat'))], shell=True)
+		# Update Windows Registry and Force Desktop Reload
+		os.system('''reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v Wallpaper /t REG_SZ /d  %s /f''' % image)
+		os.system('''RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters 1, True''')
 
 	elif desktop_env == 'mac':
 
