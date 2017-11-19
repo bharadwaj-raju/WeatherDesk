@@ -22,6 +22,7 @@
 
 from urllib.request import urlopen
 import urllib.error
+import urllib.parse
 import os
 import time
 import datetime
@@ -345,7 +346,7 @@ def restart_program():
 
 def main():
 
-	weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + city + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+	weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + urllib.parse.quote(city) + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
 	weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
 
