@@ -277,7 +277,6 @@ def get_file_format(file_format_arg):
 
 def validate_args(args):
     parsed_args = dict(args).copy()
-    print(parsed_args)
 
     try:
         parsed_args['city'] = get_city(args['city'])
