@@ -214,7 +214,7 @@ def get_time_of_day(level=3):
             return 'night'
 
 
-def get_weather_summary(weather_name, time=False):
+def get_weather_summary(weather_name):
     summaries = {'rain': ['drizzle', 'rain', 'shower'],
                  'wind': ['breez', 'gale', 'wind'],  # breez matches both breeze and breezy
                  'thunder': ['thunder'],
