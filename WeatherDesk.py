@@ -36,15 +36,15 @@ import subprocess as sp
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
 
-       WEATHER		   |	FILENAME
+       WEATHER		     |	FILENAME
 _________________________|________________
- Clear, Calm, Fair:	  | normal{0}
- Thunderstorm:		   | thunder{0}
- Windy, Breeze, Gale:	| wind{0}
+ Clear, Calm, Fair:	     | normal{0}
+ Thunderstorm:		     | thunder{0}
+ Windy, Breeze, Gale:	 | wind{0}
  Drizzle, Rain, Showers: | rain{0}
- Snow:				   | snow{0}
+ Snow:				     | snow{0}
  Cloudy:				 | cloudy{0}
- Other:				  | normal{0}
+ Other:				     | normal{0}
 
  If using with --time or --time 3, add:
  "day-", "night-" or "evening-" in front of filename.
