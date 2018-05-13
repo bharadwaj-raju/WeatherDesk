@@ -148,26 +148,22 @@ def validate_args(args):
 
 
 def get_time_of_day(level=3):
-    '''
+    """
     For detail level 2:
     06 to 20: day
     20 to 06: night
-    '''
 
-    '''
     For detail level 3:
     06 to 17: day
     17 to 20: evening
     20 to 06: night
-    '''
 
-    '''
     For detail level 4:
     06 to 08: morning
     08 to 17: day
     17 to 20: evening
     20 to 06: night
-    '''
+    """
 
     current_time = datetime.datetime.now()
 
