@@ -356,54 +356,49 @@ def main():
 
 
 # Main loop
-
-if args.one_time_run:
-    main()
-    sys.exit(0)
-
-while True:
-
-    try:
-
+if __name__ == '__main__':
+    if args.one_time_run:
         main()
+        sys.exit(0)
 
-    except urllib.error.URLError:
+    trace_main_loop = None
 
-        # Don't shut off on temporary network problems
+    while True:
+        try:
+            main()
 
-        trace_main_loop = '[Main loop] \n' + traceback.format_exc()
+        except urllib.error.URLError:
+            # Don't shut off on temporary network problems
+            trace_main_loop = '[Main loop] \n' + traceback.format_exc()
 
-        if sys.platform.startswith('linux'):
-            # HACK: glibc on Linux only loads /etc/resolv.conf once
-            # This breaks our network communications after suspend/resume
-            # So we force it to reload using the res_init() function
+            if sys.platform.startswith('linux'):
+                # HACK: glibc on Linux only loads /etc/resolv.conf once
+                # This breaks our network communications after suspend/resume
+                # So we force it to reload using the res_init() function
 
-            # But sometimes res_init() mysteriously crashes the program
-            # and it's too low-level for any try-except to catch.
+                # But sometimes res_init() mysteriously crashes the program
+                # and it's too low-level for any try-except to catch.
 
-            # So we restart the whole thing!
+                # So we restart the whole thing!
 
-            restart_program()
+                restart_program()
 
-    except ValueError:
+        except ValueError:
+            # Sometimes JSON returns a null value for no reason
 
-        # Sometimes JSON returns a null value for no reason
+            trace_main_loop = '[Main loop] \n' + traceback.format_exc()
 
-        trace_main_loop = '[Main loop] \n' + traceback.format_exc()
+        except:
+            # All other errors (except KeyboardInterrupt ^C)
+            # We'll still have a full stack trace
 
-    except:
+            trace_main_loop = '[Main loop] \n' + traceback.format_exc()
 
-        # All other errors (except KeyboardInterrupt ^C)
-        # We'll still have a full stack trace
+        else:
+            trace_main_loop = '[Main loop] No error.'
 
-        trace_main_loop = '[Main loop] \n' + traceback.format_exc()
+        finally:
+            if trace_main_loop:
+                print(trace_main_loop)
 
-    else:
-
-        trace_main_loop = '[Main loop] No error.'
-
-    finally:
-
-        print(trace_main_loop)
-
-    time.sleep(wait_time)
+        time.sleep(wait_time)
