@@ -99,6 +99,11 @@ def get_args():
         required=False)
 
     arg_parser.add_argument(
+        '--no-weather', action='store_true',
+        help='Disable the weather functionality of the script. Wallpapers will only be changed based on the time of day.',
+        required=False)
+
+    arg_parser.add_argument(
         '-c', '--city', metavar='name', type=str,
         help=str('Specify city for weather. If not given, taken from ipinfo.io.'),
         nargs='+', required=False)
@@ -114,14 +119,13 @@ def get_args():
 def validate_args(args):
     parsed_args = dict(args).copy()
 
-    try:
-        parsed_args['city'] = get_city(args['city'])
-    except (urllib.error.URLError, ValueError):
-        sys.stderr.write(
-            'Finding city from IP failed! Specify city manually with --city.')
-        sys.exit(1)
-
-    parsed_args['time'] = args['time']
+    if not parsed_args['no_weather']:
+        try:
+            parsed_args['city'] = get_city(args['city'])
+        except (urllib.error.URLError, ValueError):
+            sys.stderr.write(
+                'Finding city from IP failed! Specify city manually with --city.')
+            sys.exit(1)
 
     try:
         parsed_args['walls_dir'] = get_config_dir(args['dir'])
@@ -135,8 +139,9 @@ def validate_args(args):
 
     missing_files = get_missing_files(
         time_level=parsed_args['time'],
+        no_weather=parsed_args['no_weather'],
         file_format=parsed_args['file_format'],
-        walls_dir=parsed_args['walls_dir']
+        walls_dir=parsed_args['walls_dir'],
     )
     if missing_files:
         sys.stderr.write('\nNot all required files were found!\n The following files were expected, but are missing:\n')
@@ -226,18 +231,25 @@ def get_file_format(file_format_arg):
 
 
 def get_file_name(weather, daytime, walls_dir, file_format):
-    if daytime:
+    if weather and daytime:
         name = '{}-{}'.format(daytime, weather)
-    else:
+    elif weather:
         name = weather
+    elif daytime:
+        name = daytime
+    else:
+        raise ValueError('Either a correct weather or a correct time is required.')
 
     return os.path.join(walls_dir, name + file_format)
 
 
-def get_missing_files(time_level, file_format, walls_dir):
+def get_missing_files(time_level, no_weather, file_format, walls_dir):
     missing_files = []
 
-    weathers = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
+    if no_weather:
+        weathers = [None]
+    else:
+        weathers = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
 
     if time_level == 2:
         daytimes = ['day', 'night']
@@ -284,15 +296,19 @@ def get_current_weather(city):
     return weather, city_with_area
 
 
-def set_conditional_wallpaper(city, time_level, walls_dir, file_format):
-    weather, actual_city = get_current_weather(city)
-    weather_code = get_weather_summary(weather)
-    print('The retrieved weather for {} is {}'.format(actual_city, weather))
+def set_conditional_wallpaper(city, time_level, no_weather, walls_dir, file_format):
+    if not no_weather:
+        weather, actual_city = get_current_weather(city)
+        weather_code = get_weather_summary(weather)
+        print('The retrieved weather for {} is {}'.format(actual_city, weather))
+    else:
+        weather_code = None
 
     time_of_day = get_time_of_day(time_level)
     print('The current time of the day is {}'.format(time_of_day))
 
     file_name = get_file_name(weather_code, time_of_day, walls_dir, file_format)
+    print('Changing wallpaper to {}'.format(file_name))
 
     desktop_env = Desktop.get_desktop_environment()
 
@@ -322,7 +338,10 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if parsed_args['one_time_run']:
-        set_conditional_wallpaper(parsed_args['city'], parsed_args['time_level'], parsed_args['walls_dir'],
+        set_conditional_wallpaper(parsed_args['city'],
+                                  parsed_args['time'],
+                                  parsed_args['no_weather'],
+                                  parsed_args['walls_dir'],
                                   parsed_args['file_format'])
         sys.exit(0)
 
@@ -330,7 +349,10 @@ if __name__ == '__main__':
 
     while True:
         try:
-            set_conditional_wallpaper(parsed_args['city'], parsed_args['time'], parsed_args['walls_dir'],
+            set_conditional_wallpaper(parsed_args['city'],
+                                      parsed_args['time'],
+                                      parsed_args['no_weather'],
+                                      parsed_args['walls_dir'],
                                       parsed_args['file_format'])
 
         except urllib.error.URLError:
