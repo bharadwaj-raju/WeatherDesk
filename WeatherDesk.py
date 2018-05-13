@@ -3,7 +3,6 @@
 
 # Copyright © 2016 Bharadwaj Raju <bharadwaj.raju777@gmail.com>
 # All Rights Reserved.
-
 # This file is part of WeatherDesk.
 #
 # WeatherDesk is free software: you can redistribute it and/or modify
@@ -20,18 +19,21 @@
 # along with WeatherDesk (in the LICENSE file).
 # If not, see <http://www.gnu.org/licenses/>.
 
-from urllib.request import urlopen
-import urllib.error
-import urllib.parse
-import os
-import time
+import argparse
 import datetime
 import json
+import os
+import subprocess
 import sys
-import argparse
-import Desktop
+import time
 import traceback
-import subprocess as sp
+import urllib.error
+import urllib.parse
+
+from itertools import product
+from urllib.request import urlopen
+
+import Desktop
 
 NAMING_RULES = '''
 This is how to name files in the wallpaper directory:\n
@@ -56,131 +58,58 @@ _________________________|________________
  "day-" or "night-"
 '''
 
-# Arguments
 
-arg_parser = argparse.ArgumentParser(
-    description='''WeatherDesk - Change the wallpaper based on the weather
-    (Uses the Yahoo! Weather API)''',
-    formatter_class=argparse.RawTextHelpFormatter)
+def get_args():
+    arg_parser = argparse.ArgumentParser(
+        description='''WeatherDesk - Change the wallpaper based on the weather
+        (Uses the Yahoo! Weather API)''',
+        formatter_class=argparse.RawTextHelpFormatter)
 
-arg_parser.add_argument(
-    '-d', '--dir', metavar='directory', type=str,
-    help='Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls',
-    required=False)
+    arg_parser.add_argument(
+        '-d', '--dir', metavar='directory', type=str,
+        help='Specify wallpaper directory. Default: %s' % '~/.weatherdesk_walls',
+        required=False)
 
-arg_parser.add_argument(
-    '-f', '--format', metavar='format', type=str,
-    help='Specify image file format. Default: %s' % '.jpg',
-    required=False)
+    arg_parser.add_argument(
+        '-f', '--format', metavar='format', type=str,
+        help='Specify image file format. Default: %s' % '.jpg',
+        default='.jpg',
+        required=False)
 
-arg_parser.add_argument(
-    '-w', '--wait', metavar='seconds', type=int,
-    help='Specify time (in seconds) to wait before updating. Default: 600',
-    required=False)
+    arg_parser.add_argument(
+        '-w', '--wait', metavar='seconds', type=int,
+        help='Specify time (in seconds) to wait before updating. Default: 600',
+        default=600,
+        required=False)
 
-arg_parser.add_argument(
-    '-t', '--time', nargs='?',
-    help='''Use different backgrounds for different times.\n
-Variations:
-  2 = day/night
-  3 = day/evening/night [Default]
-  4 = morning/day/evening/night
+    arg_parser.add_argument(
+        '-t', '--time', nargs='?',
+        help='''Use different backgrounds for different times.\n
+    Variations:
+      2 = day/night
+      3 = day/evening/night [Default]
+      4 = morning/day/evening/night
+    
+    See --naming.''',
+        type=int, choices=[2, 3, 4], default=3, required=False)
 
-See --naming.''',
-    type=int, choices=[2, 3, 4], const=3, required=False)
+    arg_parser.add_argument(
+        '-n', '--naming', action='store_true',
+        help='Show the image file-naming rules and exit.',
+        required=False)
 
-arg_parser.add_argument(
-    '-n', '--naming', action='store_true',
-    help='Show the image file-naming rules and exit.',
-    required=False)
+    arg_parser.add_argument(
+        '-c', '--city', metavar='name', type=str,
+        help=str('Specify city for weather. If not given, taken from ipinfo.io.'),
+        nargs='+', required=False)
 
-arg_parser.add_argument(
-    '-c', '--city', metavar='name', type=str,
-    help=str('Specify city for weather. If not given, taken from ipinfo.io.'),
-    nargs='+', required=False)
+    arg_parser.add_argument(
+        '-o', '--one-time-run', action='store_true',
+        help='Run once, then exit.',
+        required=False)
 
-arg_parser.add_argument(
-    '-o', '--one-time-run', action='store_true',
-    help='Run once, then exit.',
-    required=False)
+    return vars(arg_parser.parse_args())
 
-args = arg_parser.parse_args()
-
-if args.city:
-
-    city = ' '.join(args.city).replace(' ', '%20')
-
-else:
-
-    try:
-
-        city_json_url = 'http://ipinfo.io/json'
-
-        city_json = urlopen(city_json_url).read().decode('utf-8')
-
-        city = json.loads(city_json)
-        city = city['city'].replace(' ', '%20')
-
-    except urllib.error.URLError:
-
-        sys.stderr.write(
-            'Finding city from IP failed! Specify city manually with --city.')
-
-        sys.exit(1)
-
-    except ValueError:
-
-        sys.stderr.write(
-            'Finding city from IP failed! Specify city manually with --city.')
-
-        sys.exit(1)
-
-    if not city:
-        sys.stderr.write(
-            'Finding city from IP failed! Specify city manually with --city.')
-
-        sys.exit(1)
-
-use_time = bool(args.time)
-
-if args.dir:
-
-    # User provided a directory
-    walls_dir = os.path.abspath(args.dir)
-
-    if not os.path.isdir(walls_dir):
-        sys.stderr.write('Invalid directory %s.' % walls_dir)
-        sys.exit(1)
-else:
-
-    walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
-
-    if not os.path.isdir(walls_dir):
-        os.mkdir(walls_dir)
-        fmt = '''No directory specified.
-Creating in {}... Put files there or specify directory with --dir'''
-        sys.stderr.write(fmt.format(walls_dir))
-        sys.exit(1)
-
-if args.format:
-
-    if not args.format.startswith('.'):
-        args.format = '.' + args.format
-
-    file_format = args.format
-
-else:
-
-    file_format = '.jpg'
-
-wait_time = args.wait or 600  # ten minutes
-
-if args.naming:
-    print(NAMING_RULES.format(file_format))
-    sys.exit(0)
-
-
-# Functions
 
 def get_time_of_day(level=3):
     '''
@@ -249,75 +178,50 @@ def get_time_of_day(level=3):
             return 'night'
 
 
-def get_file_name(weather_name, time=False):
-    summaries = {'rain': 'drizzle rain shower',
-                 'wind': 'breez gale wind',  # breez matches both breeze and breezy
-                 'thunder': 'thunder',
-                 'snow': 'snow',
-                 'cloudy': 'cloud'}
+def get_weather_summary(weather_name, time=False):
+    summaries = {'rain': ['drizzle', 'rain', 'shower'],
+                 'wind': ['breez', 'gale', 'wind'],  # breez matches both breeze and breezy
+                 'thunder': ['thunder'],
+                 'snow': ['snow'],
+                 'cloudy': ['cloud']}
 
-    def get_weather_summary():
-
-        for summary, words in summaries.items():
-
-            for word in words.split():
-
-                if word in weather_name:
-                    return summary
-
-        return 'normal'
-
-    weather_file = get_weather_summary() + file_format
-
-    if time:
-        return get_time_of_day(args.time) + '-' + weather_file
-
-    return weather_file
+    for summary, options in summaries.items():
+        if weather_name in options:
+            return summary
+    return 'normal'
 
 
-def check_if_all_files_exist(time=False, level=3):
-    all_exist = True
+def get_file_name(weather, daytime, walls_dir, file_format):
+    if daytime:
+        name = '{}-{}'.format(daytime, weather)
+    else:
+        name = weather
 
-    required_files = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
-
-    if time:
-
-        if level == 3:
-
-            daytime = ['day', 'evening', 'night']
-
-        elif level == 4:
-
-            daytime = ['morning', 'day', 'evening', 'night']
-
-        else:  # level 2
-
-            daytime = ['day', 'night']
-
-        required_files = [
-            moment + '-' + weather
-
-            for moment in daytime
-            for weather in required_files]
-
-    for i in required_files:
-
-        file_path = os.path.join(walls_dir, (i + file_format))
-
-        if not os.path.isfile(file_path):
-            all_exist = False
-
-            sys.stderr.write(file_path + '\n')
-
-    return all_exist
+    return os.path.join(walls_dir, name + file_format)
 
 
-if not check_if_all_files_exist(time=use_time, level=args.time):
-    sys.stderr.write(
-        '\nNot all required files were found.\n %s' % NAMING_RULES.format(
-            file_format))
+def get_missing_files(time_level, file_format, walls_dir):
+    missing_files = []
 
-    sys.exit(1)
+    weathers = ['rain', 'snow', 'normal', 'cloudy', 'wind', 'thunder']
+
+    if time_level == 2:
+        daytimes = ['day', 'night']
+    elif time_level == 3:  # level 2
+        daytimes = ['day', 'evening', 'night']
+    elif time_level == 4:
+        daytimes = ['morning', 'day', 'evening', 'night']
+    else:
+        daytimes = [None]
+
+    required_files = (get_file_name(weather, daytime, walls_dir, file_format) for weather, daytime in
+                      product(weathers, daytimes))
+
+    for file in required_files:
+        if not os.path.isfile(file):
+            missing_files.append(file)
+
+    return missing_files
 
 
 def restart_program():
@@ -328,44 +232,134 @@ def restart_program():
     for i in sys.argv:
         new_weatherdesk_cmd = ' ' + i
 
-    sp.Popen([new_weatherdesk_cmd], shell=True)
+    subprocess.Popen([new_weatherdesk_cmd], shell=True)
 
     sys.exit(0)
 
 
-def main():
+def get_city(city_arg):
+    if city_arg:
+        city = ' '.join(city_arg).replace(' ', '%20')
+    else:
+        city_json_url = 'http://ipinfo.io/json'
+
+        city_json = urlopen(city_json_url).read().decode('utf-8')
+
+        city = json.loads(city_json)
+        city = city['city'].replace(' ', '%20')
+    return city
+
+
+def get_config_dir(config_dir_arg):
+    if config_dir_arg:
+        # User provided a directory
+        walls_dir = os.path.abspath(config_dir_arg)
+
+        if not os.path.isdir(walls_dir):
+            raise ValueError('Invalid directory %s.' % walls_dir)
+    else:
+        walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
+
+        if not os.path.isdir(walls_dir):
+            os.mkdir(walls_dir)
+            fmt = '''No directory specified.
+    Creating in {}... Put files there or specify directory with --dir'''
+            raise ValueError(fmt.format(walls_dir))
+    return walls_dir
+
+
+def get_file_format(file_format_arg):
+    if not file_format_arg.startswith('.'):
+        file_format_arg = '.' + file_format_arg
+
+    return file_format_arg
+
+
+def validate_args(args):
+    parsed_args = dict(args).copy()
+    print(parsed_args)
+
+    try:
+        parsed_args['city'] = get_city(args['city'])
+    except (urllib.error.URLError, ValueError):
+        sys.stderr.write(
+            'Finding city from IP failed! Specify city manually with --city.')
+        sys.exit(1)
+
+    parsed_args['time'] = args['time']
+
+    try:
+        parsed_args['walls_dir'] = get_config_dir(args['dir'])
+    except ValueError as e:
+        sys.stderr.write(e)
+        sys.exit(1)
+
+    parsed_args['file_format'] = get_file_format(args['format'])
+
+    parsed_args['wait_time'] = args['wait']  # ten minutes
+
+    missing_files = get_missing_files(
+        time_level=parsed_args['time'],
+        file_format=parsed_args['file_format'],
+        walls_dir=parsed_args['walls_dir']
+    )
+    if missing_files:
+        sys.stderr.write('\nNot all required files were found!\n The following files were expected, but are missing:\n')
+        for file in missing_files:
+            sys.stderr.write(file + '\n')
+        sys.exit(1)
+
+    return parsed_args
+
+
+def get_current_weather(city):
     weather_json_url = r'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22' + urllib.parse.quote(
         city) + '%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 
-    weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))
+    weather_json = json.loads(urlopen(weather_json_url).read().decode('utf-8'))['query']['results']['channel']
 
-    weather = str(weather_json['query']['results']['channel']['item']['condition']['text']).lower()
+    weather = str(weather_json['item']['condition']['text']).lower()
 
-    city_with_area = str(weather_json['query']['results']['channel']['location']['city']) + str(
-        weather_json['query']['results']['channel']['location']['region'])
+    city_with_area = str(weather_json['location']['city']) + str(weather_json['location']['region'])
 
-    print(weather)
-    print(city_with_area)
+    return weather, city_with_area
 
-    print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+
+def set_conditional_wallpaper(city, time_level, walls_dir, file_format):
+    weather, actual_city = get_current_weather(city)
+    weather_code = get_weather_summary(weather)
+    print('The retrieved weather for {} is {}'.format(actual_city, weather))
+
+    time_of_day = get_time_of_day(time_level)
+    print('The current time of the day is {}'.format(time_of_day))
+
+    file_name = get_file_name(weather_code, time_of_day, walls_dir, file_format)
 
     desktop_env = Desktop.get_desktop_environment()
 
-    Desktop.set_wallpaper(
-        os.path.join(walls_dir, get_file_name(weather, time=use_time)), desktop_env)
+    Desktop.set_wallpaper(file_name, desktop_env)
 
 
-# Main loop
 if __name__ == '__main__':
-    if args.one_time_run:
-        main()
+
+    args = get_args()
+    parsed_args = validate_args(args)
+
+    if parsed_args['naming']:
+        print(NAMING_RULES.format(parsed_args['file_format']))
+        sys.exit(0)
+
+    if parsed_args['one_time_run']:
+        set_conditional_wallpaper(parsed_args['city'], parsed_args['time_level'], parsed_args['walls_dir'],
+                                  parsed_args['file_format'])
         sys.exit(0)
 
     trace_main_loop = None
 
     while True:
         try:
-            main()
+            set_conditional_wallpaper(parsed_args['city'], parsed_args['time'], parsed_args['walls_dir'],
+                                      parsed_args['file_format'])
 
         except urllib.error.URLError:
             # Don't shut off on temporary network problems
@@ -401,4 +395,4 @@ if __name__ == '__main__':
             if trace_main_loop:
                 print(trace_main_loop)
 
-        time.sleep(wait_time)
+        time.sleep(parsed_args['wait_time'])
