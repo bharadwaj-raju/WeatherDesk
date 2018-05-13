@@ -56,6 +56,9 @@ _________________________|________________
 
  If using with --time 2, add:
  "day-" or "night-"
+ 
+ If you use --no-weather, the files have to be named simply after the time of day depending of your time schema.
+ E.g.: "day.{0}", "night.{0}"
 '''
 
 
