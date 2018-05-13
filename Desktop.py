@@ -117,6 +117,7 @@ def set_wallpaper(image):
         uri = 'file://%s' % image
 
         try:
+            from gi.repository import Gio
             SCHEMA = 'org.gnome.desktop.background'
             KEY = 'picture-uri'
             gsettings = Gio.Settings.new(SCHEMA)
@@ -212,6 +213,7 @@ def set_wallpaper(image):
         desktop_conf.read(os.path.join(desktop_conf_file))
 
         try:
+            import codecs
             if desktop_conf.has_option('razor', config_option):  # only replacing a value
                 desktop_conf.set('razor', config_option, image)
                 with codecs.open(desktop_conf_file, 'w', encoding='utf-8', errors='replace') as f:
