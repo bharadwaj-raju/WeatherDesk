@@ -109,8 +109,7 @@ def is_running(process):
     return process in str(process_list)
 
 
-def set_wallpaper(image):
-    desktop_env = get_desktop_environment()
+def set_wallpaper(image, desktop_env):
 
     if desktop_env in ['gnome', 'unity', 'cinnamon', 'pantheon']:
 

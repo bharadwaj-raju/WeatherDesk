@@ -349,8 +349,10 @@ def main():
 
     print(os.path.join(walls_dir, get_file_name(weather, time=use_time)))
 
+    desktop_env = Desktop.get_desktop_environment()
+
     Desktop.set_wallpaper(
-        os.path.join(walls_dir, get_file_name(weather, time=use_time)))
+        os.path.join(walls_dir, get_file_name(weather, time=use_time)), desktop_env)
 
 
 # Main loop
