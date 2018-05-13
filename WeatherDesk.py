@@ -111,6 +111,42 @@ def get_args():
     return vars(arg_parser.parse_args())
 
 
+def validate_args(args):
+    parsed_args = dict(args).copy()
+
+    try:
+        parsed_args['city'] = get_city(args['city'])
+    except (urllib.error.URLError, ValueError):
+        sys.stderr.write(
+            'Finding city from IP failed! Specify city manually with --city.')
+        sys.exit(1)
+
+    parsed_args['time'] = args['time']
+
+    try:
+        parsed_args['walls_dir'] = get_config_dir(args['dir'])
+    except ValueError as e:
+        sys.stderr.write(e)
+        sys.exit(1)
+
+    parsed_args['file_format'] = get_file_format(args['format'])
+
+    parsed_args['wait_time'] = args['wait']  # ten minutes
+
+    missing_files = get_missing_files(
+        time_level=parsed_args['time'],
+        file_format=parsed_args['file_format'],
+        walls_dir=parsed_args['walls_dir']
+    )
+    if missing_files:
+        sys.stderr.write('\nNot all required files were found!\n The following files were expected, but are missing:\n')
+        for file in missing_files:
+            sys.stderr.write(file + '\n')
+        sys.exit(1)
+
+    return parsed_args
+
+
 def get_time_of_day(level=3):
     '''
     For detail level 2:
@@ -191,6 +227,31 @@ def get_weather_summary(weather_name, time=False):
     return 'normal'
 
 
+def get_config_dir(config_dir_arg):
+    if config_dir_arg:
+        # User provided a directory
+        walls_dir = os.path.abspath(config_dir_arg)
+
+        if not os.path.isdir(walls_dir):
+            raise ValueError('Invalid directory %s.' % walls_dir)
+    else:
+        walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
+
+        if not os.path.isdir(walls_dir):
+            os.mkdir(walls_dir)
+            fmt = '''No directory specified.
+    Creating in {}... Put files there or specify directory with --dir'''
+            raise ValueError(fmt.format(walls_dir))
+    return walls_dir
+
+
+def get_file_format(file_format_arg):
+    if not file_format_arg.startswith('.'):
+        file_format_arg = '.' + file_format_arg
+
+    return file_format_arg
+
+
 def get_file_name(weather, daytime, walls_dir, file_format):
     if daytime:
         name = '{}-{}'.format(daytime, weather)
@@ -224,19 +285,6 @@ def get_missing_files(time_level, file_format, walls_dir):
     return missing_files
 
 
-def restart_program():
-    # Restarts the current program, with file objects and descriptors cleanup
-
-    new_weatherdesk_cmd = ''
-
-    for i in sys.argv:
-        new_weatherdesk_cmd = ' ' + i
-
-    subprocess.Popen([new_weatherdesk_cmd], shell=True)
-
-    sys.exit(0)
-
-
 def get_city(city_arg):
     if city_arg:
         city = ' '.join(city_arg).replace(' ', '%20')
@@ -248,67 +296,6 @@ def get_city(city_arg):
         city = json.loads(city_json)
         city = city['city'].replace(' ', '%20')
     return city
-
-
-def get_config_dir(config_dir_arg):
-    if config_dir_arg:
-        # User provided a directory
-        walls_dir = os.path.abspath(config_dir_arg)
-
-        if not os.path.isdir(walls_dir):
-            raise ValueError('Invalid directory %s.' % walls_dir)
-    else:
-        walls_dir = os.path.join(os.path.expanduser('~'), '.weatherdesk_walls')
-
-        if not os.path.isdir(walls_dir):
-            os.mkdir(walls_dir)
-            fmt = '''No directory specified.
-    Creating in {}... Put files there or specify directory with --dir'''
-            raise ValueError(fmt.format(walls_dir))
-    return walls_dir
-
-
-def get_file_format(file_format_arg):
-    if not file_format_arg.startswith('.'):
-        file_format_arg = '.' + file_format_arg
-
-    return file_format_arg
-
-
-def validate_args(args):
-    parsed_args = dict(args).copy()
-
-    try:
-        parsed_args['city'] = get_city(args['city'])
-    except (urllib.error.URLError, ValueError):
-        sys.stderr.write(
-            'Finding city from IP failed! Specify city manually with --city.')
-        sys.exit(1)
-
-    parsed_args['time'] = args['time']
-
-    try:
-        parsed_args['walls_dir'] = get_config_dir(args['dir'])
-    except ValueError as e:
-        sys.stderr.write(e)
-        sys.exit(1)
-
-    parsed_args['file_format'] = get_file_format(args['format'])
-
-    parsed_args['wait_time'] = args['wait']  # ten minutes
-
-    missing_files = get_missing_files(
-        time_level=parsed_args['time'],
-        file_format=parsed_args['file_format'],
-        walls_dir=parsed_args['walls_dir']
-    )
-    if missing_files:
-        sys.stderr.write('\nNot all required files were found!\n The following files were expected, but are missing:\n')
-        for file in missing_files:
-            sys.stderr.write(file + '\n')
-        sys.exit(1)
-
-    return parsed_args
 
 
 def get_current_weather(city):
@@ -337,6 +324,19 @@ def set_conditional_wallpaper(city, time_level, walls_dir, file_format):
     desktop_env = Desktop.get_desktop_environment()
 
     Desktop.set_wallpaper(file_name, desktop_env)
+
+
+def restart_program():
+    # Restarts the current program, with file objects and descriptors cleanup
+
+    new_weatherdesk_cmd = ''
+
+    for i in sys.argv:
+        new_weatherdesk_cmd = ' ' + i
+
+    subprocess.Popen([new_weatherdesk_cmd], shell=True)
+
+    sys.exit(0)
 
 
 if __name__ == '__main__':
