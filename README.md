@@ -103,7 +103,7 @@ Either put them in the default `~/.weatherdesk_walls/` directory or specify a di
   - i3
   - IceWM
   - JWM
-  - KDE **3**
+  - KDE
   - LXDE
   - LXQt
   - Mate
@@ -132,9 +132,3 @@ $ nohup python3 WeatherDesk.py > /dev/null &
 Please disable the auto-reset/change of wallpaper in the  "Desktop and Screen Saver" preferences.
 
 [![Disable this](http://i.imgur.com/BFi1GHGm.png)](http://i.imgur.com/BFi1GHG.png)
-
-## Note for KDE users
-
-Since KDE 4 and above does not provide an interface to change the desktop background, KDE 4 and above is not supported.
-
-Any contributions on this welcome.
