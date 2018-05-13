@@ -147,7 +147,7 @@ def validate_args(args):
     return parsed_args
 
 
-def get_time_of_day(level=3):
+def get_time_of_day(level=3, hour=None):
     """
     For detail level 2:
     06 to 20: day
@@ -164,50 +164,27 @@ def get_time_of_day(level=3):
     17 to 20: evening
     20 to 06: night
     """
-
-    current_time = datetime.datetime.now()
-
-    if level == 3:
-
-        if current_time.hour in range(6, 17):
-
-            return 'day'
-
-        elif current_time.hour in range(17, 20):
-
-            return 'evening'
-
-        else:
-
-            return 'night'
-
-    elif level == 4:
-
-        if current_time.hour in range(6, 8):
-
-            return 'morning'
-
-        elif current_time.hour in range(8, 17):
-
-            return 'day'
-
-        elif current_time.hour in range(17, 20):
-
-            return 'evening'
-
-        else:
-
-            return 'night'
-
+    if hour is None:
+        current_hour = datetime.datetime.now().hour
     else:
+        current_hour = hour
 
-        if current_time.hour in range(6, 20):
+    if level == 2:
+        labels = ['day', 'night']
+        thres = [5, 19]
+    elif level == 3:
+        labels = ['day', 'evening', 'night']
+        thres = [5, 16, 19]
+    elif level == 4:
+        labels = ['morning', 'day', 'evening', 'night']
+        thres = [5, 7, 16, 19]
+    else:
+        raise ValueError('Invalid time level.')
 
-            return 'day'
-
-        else:
-
-            return 'night'
+    thres.append(current_hour)
+    thres.sort()
+    day_index = thres.index(current_hour)
+    return labels[day_index - 1]
 
 
 def get_weather_summary(weather_name):
