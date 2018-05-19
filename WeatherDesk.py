@@ -103,7 +103,8 @@ def get_args():
 
     arg_parser.add_argument(
         '--no-weather', action='store_true',
-        help='Disable the weather functionality of the script. Wallpapers will only be changed based on the time of day.',
+        help='Disable the weather functionality of the script. Wallpapers will only be changed based on the time of day.'
+             'With this option, no internet connection is required.',
         required=False)
 
     arg_parser.add_argument(
