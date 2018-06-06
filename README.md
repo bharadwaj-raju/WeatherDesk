@@ -1,3 +1,6 @@
+# WeatherDesk has moved!
+# Now at [GitLab](https://gitlab.com/bharadwaj-raju/WeatherDesk)!
+
 # WeatherDesk
 
 Change the wallpaper based on the weather and (optionally) the time.
